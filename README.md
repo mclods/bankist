@@ -1,7 +1,7 @@
 # bankist
 
-Bankist is a simple bank ui.
+bankist is a simple bank ui.
 
 ### Architecture:
 
-![Bankist Architecture](diagrams/bankist-architecture.jpg)
+![bankist architecture](diagrams/bankist-architecture.jpg)
