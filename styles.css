@@ -155,7 +155,16 @@ body {
   height: var(--main-container-size);
 }
 
-.transactions-container {
+.no-transactions-container {
+  border: solid 2px #d3d3d3;
+}
+
+.no-transactions {
+  font-size: 1.3rem;
+  color: #6f6f6f;
+}
+
+.transactions-container-scroll {
   overflow-y: auto;
 }
 
