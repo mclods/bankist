@@ -1,12 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bankist</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bankist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="assets/icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="font-poppins-regular">
+    <nav class="flex-row align-center nav-container">
+      <div class="flex-row align-center full-width user-title-container">
+        <p class="user-title">Hi Loran</p>
+      </div>
+      <div class="flex-row full-width justify-center">
+        <img src="assets/logo.png" alt="Company Logo" class="logo-img" />
+      </div>
+      <div class="flex-row full-width justify-end login-container">
+        <div class="flex-row align-center login-inputs-gap">
+          <input
+            type="text"
+            id="login-username-input"
+            class="font-poppins-regular login-input"
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            id="login-pin-input"
+            class="font-poppins-regular login-input"
+            placeholder="PIN"
+          />
+          <button id="login-btn" class="account-control-btn login-btn">
+            &rarr;
+          </button>
+        </div>
+
+        <!-- <div class="flex-row align-center">
+          <button id="logout-btn" class="account-control-btn logout-btn">
+            Logout &rarr;
+          </button>
+        </div> -->
+      </div>
+    </nav>
+    <main class="main-container">
+      <section class="flex-row summary-container">
+        <div class="flex-row align-center full-width">
+          <div class="flex-col">
+            <p class="balance-title">Current balance</p>
+            <p class="balance-date">as of 28-09-2025</p>
+          </div>
+        </div>
+        <div class="flex-row align-center justify-end">
+          <p class="balance-value">$2000</p>
+        </div>
+      </section>
+      <section class="flex-row transactions-operations-container">
+        <section class="flex-col full-width transactions-container">
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip deposit-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip withdrawal-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip deposit-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip withdrawal-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip deposit-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip withdrawal-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip deposit-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip withdrawal-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip deposit-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+          <div class="flex-row no-shrink align-center transaction-container">
+            <div class="flex-row full-width transaction-type-container">
+              <div class="transaction-type-chip withdrawal-chip">
+                <p class="transaction-type">1 Deposit</p>
+              </div>
+            </div>
+            <div class="flex-row full-width">
+              <p class="transaction-date">28-09-2025</p>
+            </div>
+            <div
+              class="flex-row full-width justify-end transaction-amount-container"
+            >
+              <p class="transaction-amount">$1000</p>
+            </div>
+          </div>
+        </section>
+        <section class="flex-col full-width operations-containers-gap">
+          <section
+            class="flex-col justify-center full-width operation-transfer-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Transfer Money</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="transfer-operation-recipient-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="transfer-operation-recipient-input"
+                >
+                  Transfer To
+                </label>
+              </div>
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="transfer-operation-amount-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="transfer-operation-amount-input"
+                >
+                  Amount
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="transfer-operation-btn" class="operation-btn">
+                  &rarr;
+                </button>
+              </div>
+            </div>
+          </section>
+          <section
+            class="flex-col justify-center full-width operation-loan-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Request Loan</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="loan-operation-amount-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="loan-operation-amount-input"
+                >
+                  Amount
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="loan-operation-btn" class="operation-btn">
+                  &rarr;
+                </button>
+              </div>
+            </div>
+          </section>
+          <section
+            class="flex-col justify-center full-width operation-account-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Close Account</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="account-operation-username-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="account-operation-username-input"
+                >
+                  Confirm User
+                </label>
+              </div>
+              <div class="flex-col">
+                <input
+                  type="password"
+                  id="account-operation-pin-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="account-operation-pin-input"
+                >
+                  Confirm PIN
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="account-operation-btn" class="operation-btn">
+                  &rarr;
+                </button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <footer class="footer-container"></footer>
+    <script src="script.js"></script>
+  </body>
 </html>
