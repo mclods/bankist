@@ -1,6 +1,6 @@
 :root {
   --main-container-size: 28rem;
-  --num-transaction-fields: 7;
+  --num-transaction-rows: 7;
 }
 
 * {
@@ -15,7 +15,7 @@ body {
 }
 
 .font-poppins-regular {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -135,9 +135,10 @@ body {
 
 .main-container {
   margin: 0 2rem;
+  min-height: 71vh;
 }
 
-.summary-container {
+.account-summary-container {
   margin: 2rem 12rem 0 12rem;
 }
 
@@ -180,7 +181,7 @@ body {
 }
 
 .transaction-container {
-  height: calc(var(--main-container-size) / var(--num-transaction-fields));
+  height: calc(var(--main-container-size) / var(--num-transaction-rows));
   background-color: #fff;
   border: solid 1px #dcdcdc;
   border-left: none;
@@ -230,7 +231,7 @@ body {
 }
 
 .transactions-controller-container {
-  height: calc(var(--main-container-size) / var(--num-transaction-fields));
+  height: calc(var(--main-container-size) / var(--num-transaction-rows));
   padding-top: 0.8rem;
 }
 
