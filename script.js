@@ -99,16 +99,16 @@ const userControlsComponent = {
 const mainComponent = {
   containerId: 'main-container',
   getContainer,
-  accountSummaryComponent: {
+  accountBalanceComponent: {
     data: {
       balanceDate: '',
       balanceValue: '',
     },
     containerId: 'main-container',
-    componentName: 'Account Summary',
+    componentName: 'Account Balance',
     getHtml() {
       return `
-        <section class="flex-row account-summary-container">
+        <section class="flex-row account-balance-container">
           <div class="flex-row align-center full-width">
             <div class="flex-col">
               <p class="balance-title">Current balance</p>
@@ -340,9 +340,9 @@ const mainComponent = {
           },
           getContainer,
         },
-        transactionControlsComponent: {
+        transactionListControlsComponent: {
           containerId: 'transaction-controls-container',
-          componentName: 'Transactions List Control',
+          componentName: 'Transactions List Controls',
           getHtml() {
             return `
             <div class="transactions-controller-container">
@@ -452,6 +452,9 @@ function renderComponent(component, renderPosition = 'beforeend') {
 
       if (componentHtml) {
         containerEl.insertAdjacentHTML(renderPosition, componentHtml);
+
+        // Clean Component State
+        cleanComponentState(component);
         return true;
       } else {
         console.error(ERROR_MESSAGES.htmlEmptyError(component.componentName));
@@ -504,6 +507,24 @@ function resetLoginFields() {
   pin.value = '';
 }
 
+function getTotalBalance(transactions) {
+  return transactions.reduce((acc, current) => acc + current, 0);
+}
+
+function getDepositsBalance(transactions) {
+  return transactions.reduce(
+    (acc, current) => (current >= 0 ? acc + current : acc),
+    0
+  );
+}
+
+function getWithdrawalsBalance(transactions) {
+  return transactions.reduce(
+    (acc, current) => (current < 0 ? acc + current : acc),
+    0
+  );
+}
+
 // Welcome Text Controls
 function showWelcomeUserText(userName) {
   if (welcomeUserTitleEl) {
@@ -522,18 +543,14 @@ function clearWelcomeUserText() {
 }
 
 // Main Component
-function renderAccountSummary(userAccount, component) {
+function renderAccountBalance(transactions, component) {
   // Set Data
   component.data = {
     ...component.data,
     balanceDate: '28-09-2025',
-    balanceValue: userAccount.transactions.reduce(
-      (prev, current) => prev + current,
-      0
-    ),
+    balanceValue: getTotalBalance(transactions),
   };
   renderComponent(component);
-  cleanComponentState(component);
 }
 
 function renderTransactionItem(transaction, component) {
@@ -545,7 +562,6 @@ function renderTransactionItem(transaction, component) {
     transactionAmount: transaction,
   };
   renderComponent(component);
-  cleanComponentState(component);
 }
 
 function renderTransactionItems(transactions, component) {
@@ -556,63 +572,58 @@ function renderTransactionItems(transactions, component) {
   });
 }
 
-function renderTransactionControls(component) {
+function renderTransactionListControls(component) {
   loadComponent(component);
 }
 
-function renderTransactionList(userAccount, component) {
+function renderTransactionList(transactions, component) {
   loadComponent(component);
 
   // Render Child Components
-  renderTransactionItems(
-    userAccount.transactions,
-    component.transactionListItemComponent
-  );
-  renderTransactionControls(component.transactionControlsComponent);
+  renderTransactionItems(transactions, component.transactionListItemComponent);
+  renderTransactionListControls(component.transactionListControlsComponent);
 }
 
-function renderTransactions(userAccount, component) {
-  const hasTransactions = userAccount.transactions.length > 0;
+function renderTransactions(transactions, component) {
+  const hasTransactions = transactions.length > 0;
 
   if (hasTransactions) {
-    renderTransactionList(userAccount, component.transactionsListComponent);
+    renderTransactionList(transactions, component.transactionsListComponent);
   } else {
     loadComponent(component.noTransactionsComponent);
   }
 }
 
-function renderTransactionsOperations(userAccount, component) {
+function renderTransactionsOperations(transactions, component) {
   renderComponent(component);
 
   // Render Child Components
-  renderTransactions(userAccount, component.transactionsComponent);
+  renderTransactions(transactions, component.transactionsComponent);
 }
 
-function renderTransactionSummary(userAccount, component) {
+function renderTransactionsSummary(userAccount, component) {
   // Set Data
   component.data = {
     ...component.data,
-    inAmount: userAccount.transactions.reduce(
-      (prev, current) => (current >= 0 ? prev + current : prev),
-      0
-    ),
-    outAmount: userAccount.transactions.reduce(
-      (prev, current) => (current < 0 ? prev + current : prev),
-      0
-    ),
+    inAmount: getDepositsBalance(userAccount.transactions),
+    outAmount: getWithdrawalsBalance(userAccount.transactions),
     interestRate: userAccount.interestRate,
   };
   renderComponent(component);
-  cleanComponentState(component);
 }
 
 function renderMainComponent(userAccount, component) {
-  renderAccountSummary(userAccount, component.accountSummaryComponent);
+  const transactions = userAccount.transactions;
+
+  renderAccountBalance(transactions, component.accountBalanceComponent);
   renderTransactionsOperations(
-    userAccount,
+    transactions,
     component.transactionsOperationsComponent
   );
-  renderTransactionSummary(userAccount, component.transactionsSummaryComponent);
+  renderTransactionsSummary(
+    userAccount,
+    component.transactionsSummaryComponent
+  );
 }
 
 // Component renderers
@@ -626,27 +637,31 @@ function clearMainComponent() {
 
 function renderLoginControls() {
   loadComponent(userControlsComponent.loginComponent);
-  registerLoginHandlers();
+  registerLoginEventHandlers();
 }
 
 function renderLogoutControls() {
   loadComponent(userControlsComponent.logoutComponent);
-  registerLogoutHandlers();
+  registerLogoutEventHandlers();
 }
 
 function renderUserAccountDetails(userAccount) {
-  clearMainComponent(mainComponent);
+  clearUserAccountDetails();
   renderMainComponent(userAccount, mainComponent);
 }
 
-function registerLoginHandlers() {
+function clearUserAccountDetails() {
+  clearMainComponent();
+}
+
+function registerLoginEventHandlers() {
   const loginBtn = getElement('login-btn');
   loginBtn.addEventListener('click', performLogin);
 }
 
-function registerLogoutHandlers() {
+function registerLogoutEventHandlers() {
   const loginBtn = getElement('logout-btn');
-  loginBtn.addEventListener('click', onLogout);
+  loginBtn.addEventListener('click', performLogout);
 }
 
 function performLogin() {
@@ -671,20 +686,20 @@ function performLogin() {
   }
 }
 
+function performLogout() {
+  clearWelcomeUserText();
+  renderLoginControls();
+  clearUserAccountDetails();
+}
+
 function onLogin(userAccount) {
   showWelcomeUserText(userAccount.owner);
   renderLogoutControls();
   renderUserAccountDetails(userAccount);
 }
 
-function onLogout() {
-  clearWelcomeUserText();
-  renderLoginControls();
-  clearMainComponent(mainComponent);
-}
-
 function initApp() {
-  onLogout();
+  performLogout();
 }
 
 initApp();
