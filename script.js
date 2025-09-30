@@ -6,6 +6,7 @@ const account1 = {
   transactions: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2,
   security: { userName: 'jonas', pin: 1111 },
+  culture: 'en-GB',
 };
 
 const account2 = {
@@ -13,6 +14,7 @@ const account2 = {
   transactions: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   security: { userName: 'jess', pin: 2222 },
+  culture: 'en-US',
 };
 
 const account3 = {
@@ -20,6 +22,7 @@ const account3 = {
   transactions: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   security: { userName: 'will', pin: 3333 },
+  culture: 'en-GB',
 };
 
 const account4 = {
@@ -27,14 +30,22 @@ const account4 = {
   transactions: [430, 1000, 700, 50, 90],
   interestRate: 1,
   security: { userName: 'sarah', pin: 4444 },
+  culture: 'en-GB',
 };
 
 const accounts = [account1, account2, account3, account4];
 
 // Global Variables
+const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
+
 const TRANSACTION_TYPE = {
   Deposit: 'deposit',
   Withdrawal: 'withdrawal',
+};
+
+const CURRENCY_CODES = {
+  'en-GB': '€',
+  'en-US': '$',
 };
 
 const ERROR_MESSAGES = {
@@ -487,6 +498,18 @@ function formatField(field) {
   return field ?? '';
 }
 
+function formatCurrency(value, culture) {
+  if (value === null || value === undefined) {
+    console.error('Currency value is nullish.');
+    return '';
+  } else if (culture === null || culture === undefined) {
+    console.error('Culture is nullish.');
+    return value;
+  }
+
+  return `${value}${CURRENCY_CODES[culture]}`;
+}
+
 function getTransactionType(transactionAmount) {
   return transactionAmount >= 0
     ? TRANSACTION_TYPE.Deposit
@@ -505,6 +528,13 @@ function resetLoginFields() {
 
   userName.value = '';
   pin.value = '';
+}
+
+function showLoginError() {
+  const [userName, pin] = getLoginFields();
+
+  userName.classList.add(ERROR_HIGHLIGHT_STYLE);
+  pin.classList.add(ERROR_HIGHLIGHT_STYLE);
 }
 
 function getTotalBalance(transactions) {
@@ -543,32 +573,35 @@ function clearWelcomeUserText() {
 }
 
 // Main Component
-function renderAccountBalance(transactions, component) {
+function renderAccountBalance(userAccount, component) {
   // Set Data
   component.data = {
     ...component.data,
     balanceDate: '28-09-2025',
-    balanceValue: getTotalBalance(transactions),
+    balanceValue: formatCurrency(
+      getTotalBalance(userAccount.transactions),
+      userAccount.culture
+    ),
   };
   renderComponent(component);
 }
 
-function renderTransactionItem(transaction, component) {
+function renderTransactionItem(transaction, culture, component) {
   // Set Data
   component.data = {
     ...component.data,
     type: getTransactionType(transaction),
     transactionDate: '28-09-2025',
-    transactionAmount: transaction,
+    transactionAmount: formatCurrency(transaction, culture),
   };
   renderComponent(component);
 }
 
-function renderTransactionItems(transactions, component) {
+function renderTransactionItems(transactions, culture, component) {
   clearComponent(component);
 
   transactions.forEach((transaction) => {
-    renderTransactionItem(transaction, component);
+    renderTransactionItem(transaction, culture, component);
   });
 }
 
@@ -576,48 +609,60 @@ function renderTransactionListControls(component) {
   loadComponent(component);
 }
 
-function renderTransactionList(transactions, component) {
+function renderTransactionList(transactions, culture, component) {
   loadComponent(component);
 
   // Render Child Components
-  renderTransactionItems(transactions, component.transactionListItemComponent);
+  renderTransactionItems(
+    transactions,
+    culture,
+    component.transactionListItemComponent
+  );
   renderTransactionListControls(component.transactionListControlsComponent);
 }
 
-function renderTransactions(transactions, component) {
-  const hasTransactions = transactions.length > 0;
+function renderTransactions(userAccount, component) {
+  const hasTransactions = userAccount.transactions.length > 0;
 
   if (hasTransactions) {
-    renderTransactionList(transactions, component.transactionsListComponent);
+    renderTransactionList(
+      userAccount.transactions,
+      userAccount.culture,
+      component.transactionsListComponent
+    );
   } else {
     loadComponent(component.noTransactionsComponent);
   }
 }
 
-function renderTransactionsOperations(transactions, component) {
+function renderTransactionsOperations(userAccount, component) {
   renderComponent(component);
 
   // Render Child Components
-  renderTransactions(transactions, component.transactionsComponent);
+  renderTransactions(userAccount, component.transactionsComponent);
 }
 
 function renderTransactionsSummary(userAccount, component) {
   // Set Data
   component.data = {
     ...component.data,
-    inAmount: getDepositsBalance(userAccount.transactions),
-    outAmount: getWithdrawalsBalance(userAccount.transactions),
-    interestRate: userAccount.interestRate,
+    inAmount: formatCurrency(
+      getDepositsBalance(userAccount.transactions),
+      userAccount.culture
+    ),
+    outAmount: formatCurrency(
+      getWithdrawalsBalance(userAccount.transactions),
+      userAccount.culture
+    ),
+    interestRate: `${userAccount.interestRate}%`,
   };
   renderComponent(component);
 }
 
 function renderMainComponent(userAccount, component) {
-  const transactions = userAccount.transactions;
-
-  renderAccountBalance(transactions, component.accountBalanceComponent);
+  renderAccountBalance(userAccount, component.accountBalanceComponent);
   renderTransactionsOperations(
-    transactions,
+    userAccount,
     component.transactionsOperationsComponent
   );
   renderTransactionsSummary(
@@ -679,6 +724,7 @@ function performLogin() {
   if (accountToLogin) {
     onLogin(accountToLogin);
   } else {
+    showLoginError();
     resetLoginFields();
     console.info(
       `Login Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`

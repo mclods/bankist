@@ -133,6 +133,11 @@ body {
   outline-color: #939393;
 }
 
+.error-highlight {
+  outline: none !important;
+  border: solid 2px red !important;
+}
+
 .main-container {
   margin: 0 2rem;
   min-height: 71vh;
