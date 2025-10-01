@@ -41,10 +41,10 @@ const account5 = {
   culture: 'INR',
 };
 
-const accounts = [account1, account2, account3, account4, account5];
+const ACCOUNTS = [account1, account2, account3, account4, account5];
 
 // Global Variables
-let loggedInUser;
+let LOGGED_IN_USER;
 
 const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
 
@@ -66,8 +66,11 @@ const ERROR_MESSAGES = {
   containerMissingError(containerId) {
     return `Container with ID: ${containerId} does not exist in the DOM.`;
   },
-  htmlEmptyError(componentName) {
-    return `${componentName} does not have a valid HTML.`;
+  componentMissingError(componentId) {
+    return `Component with ID: ${componentId} does not exist in the DOM.`;
+  },
+  htmlEmptyError(componentId) {
+    return `Component with ID: ${componentId} does not have a valid HTML.`;
   },
 };
 
@@ -80,41 +83,53 @@ const userControlsComponent = {
   getContainer,
   loginComponent: {
     containerId: 'user-controls-container',
-    componentName: 'Login',
+    componentId: 'login-container',
     getHtml() {
       return `
-        <div class="flex-row align-center login-inputs-gap">
-          <input
-            type="text"
-            id="login-username-input"
-            class="font-poppins-regular login-input"
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            id="login-pin-input"
-            class="font-poppins-regular login-input"
-            placeholder="PIN"
-          />
-          <button id="login-btn" class="bankist-btn login-btn">&rarr;</button>
+        <div id="login-container" class="flex-row align-center login-inputs-gap">
+          ${this.getChildHtml()}
         </div>
       `;
     },
+    getChildHtml() {
+      return `
+        <input
+          type="text"
+          id="login-username-input"
+          class="font-poppins-regular login-input"
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          id="login-pin-input"
+          class="font-poppins-regular login-input"
+          placeholder="PIN"
+        />
+        <button id="login-btn" class="bankist-btn login-btn">&rarr;</button>
+      `;
+    },
     getContainer,
+    getComponent,
   },
   logoutComponent: {
     containerId: 'user-controls-container',
-    componentName: 'Logout',
+    componentId: 'logout-container',
     getHtml() {
       return `
-        <div class="flex-row align-center">
-          <button id="logout-btn" class="bankist-btn logout-btn">
-            Logout &rarr;
-          </button>
+        <div id="logout-container" class="flex-row align-center">
+          ${this.getChildHtml()}
         </div>
       `;
     },
+    getChildHtml() {
+      return `
+        <button id="logout-btn" class="bankist-btn logout-btn">
+          Logout &rarr;
+        </button>
+      `;
+    },
     getContainer,
+    getComponent,
   },
 };
 
@@ -127,174 +142,197 @@ const mainComponent = {
       balanceValue: '',
     },
     containerId: 'main-container',
-    componentName: 'Account Balance',
+    componentId: 'account-balance-container',
     getHtml() {
       return `
-        <section class="flex-row account-balance-container">
-          <div class="flex-row align-center full-width">
-            <div class="flex-col">
-              <p class="balance-title">Current balance</p>
-              <p class="balance-date">as of ${formatField(
-                this.data.balanceDate
-              )}</p>
-            </div>
-          </div>
-          <div class="flex-row align-center justify-end">
-            <p class="balance-value">${formatField(this.data.balanceValue)}</p>
-          </div>
+        <section id="account-balance-container" class="flex-row account-balance-container">
+          ${this.getChildHtml()}
         </section>
       `;
     },
+    getChildHtml() {
+      return `
+        <div class="flex-row align-center full-width">
+          <div class="flex-col">
+            <p class="balance-title">Current balance</p>
+            <p class="balance-date">as of ${formatField(
+              this.data.balanceDate
+            )}</p>
+          </div>
+        </div>
+        <div class="flex-row align-center justify-end">
+          <p class="balance-value">${formatField(this.data.balanceValue)}</p>
+        </div>
+      `;
+    },
     getContainer,
+    getComponent,
   },
   transactionsOperationsComponent: {
     containerId: 'main-container',
-    componentName: 'Transactions Operations',
+    componentId: 'transactions-operations-container',
     getHtml() {
       return `
         <section
+          id="transactions-operations-container"
           class="flex-row transactions-operations-container transactions-operations-container-gap"
         >
-          <div id="transactions-container" class="flex-row full-width"></div>
-          <div class="flex-col full-width operations-containers-gap">
-            <div
-              class="flex-col justify-center full-width operation-transfer-container rounded content-padding"
-            >
-              <div class="flex-row operation-title-container">
-                <p class="operation-title">Transfer Money</p>
-              </div>
-              <div class="flex-row operation-fields-gap">
-                <div class="flex-col">
-                  <input
-                    type="text"
-                    id="transfer-operation-recipient-input"
-                    class="operation-input font-poppins-regular"
-                  />
-                  <label
-                    class="operation-input-label"
-                    for="transfer-operation-recipient-input"
-                  >
-                    Transfer To
-                  </label>
-                </div>
-                <div class="flex-col">
-                  <input
-                    type="text"
-                    id="transfer-operation-amount-input"
-                    class="operation-input font-poppins-regular"
-                  />
-                  <label
-                    class="operation-input-label"
-                    for="transfer-operation-amount-input"
-                  >
-                    Amount
-                  </label>
-                </div>
-                <div class="flex-col">
-                  <button id="transfer-operation-btn" class="bankist-btn operation-btn">
-                    &rarr;
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              class="flex-col justify-center full-width operation-loan-container rounded content-padding"
-            >
-              <div class="flex-row operation-title-container">
-                <p class="operation-title">Request Loan</p>
-              </div>
-              <div class="flex-row operation-fields-gap">
-                <div class="flex-col">
-                  <input
-                    type="text"
-                    id="loan-operation-amount-input"
-                    class="operation-input font-poppins-regular"
-                  />
-                  <label
-                    class="operation-input-label"
-                    for="loan-operation-amount-input"
-                  >
-                    Amount
-                  </label>
-                </div>
-                <div class="flex-col">
-                  <button id="loan-operation-btn" class="bankist-btn operation-btn">&rarr;</button>
-                </div>
-              </div>
-            </div>
-            <div
-              class="flex-col justify-center full-width operation-account-container rounded content-padding"
-            >
-              <div class="flex-row operation-title-container">
-                <p class="operation-title">Close Account</p>
-              </div>
-              <div class="flex-row operation-fields-gap">
-                <div class="flex-col">
-                  <input
-                    type="text"
-                    id="account-operation-username-input"
-                    class="operation-input font-poppins-regular"
-                  />
-                  <label
-                    class="operation-input-label"
-                    for="account-operation-username-input"
-                  >
-                    Confirm User
-                  </label>
-                </div>
-                <div class="flex-col">
-                  <input
-                    type="password"
-                    id="account-operation-pin-input"
-                    class="operation-input font-poppins-regular"
-                  />
-                  <label
-                    class="operation-input-label"
-                    for="account-operation-pin-input"
-                  >
-                    Confirm PIN
-                  </label>
-                </div>
-                <div class="flex-col">
-                  <button id="account-operation-btn" class="bankist-btn operation-btn">
-                    &rarr;
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          ${this.getChildHtml()}
         </section>
       `;
     },
+    getChildHtml() {
+      return `
+        <div id="transactions-container" class="flex-row full-width"></div>
+        <div class="flex-col full-width operations-containers-gap">
+          <div
+            class="flex-col justify-center full-width operation-transfer-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Transfer Money</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="transfer-operation-recipient-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="transfer-operation-recipient-input"
+                >
+                  Transfer To
+                </label>
+              </div>
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="transfer-operation-amount-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="transfer-operation-amount-input"
+                >
+                  Amount
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="transfer-operation-btn" class="bankist-btn operation-btn">
+                  &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-col justify-center full-width operation-loan-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Request Loan</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="loan-operation-amount-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="loan-operation-amount-input"
+                >
+                  Amount
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="loan-operation-btn" class="bankist-btn operation-btn">&rarr;</button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-col justify-center full-width operation-account-container rounded content-padding"
+          >
+            <div class="flex-row operation-title-container">
+              <p class="operation-title">Close Account</p>
+            </div>
+            <div class="flex-row operation-fields-gap">
+              <div class="flex-col">
+                <input
+                  type="text"
+                  id="account-operation-username-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="account-operation-username-input"
+                >
+                  Confirm User
+                </label>
+              </div>
+              <div class="flex-col">
+                <input
+                  type="password"
+                  id="account-operation-pin-input"
+                  class="operation-input font-poppins-regular"
+                />
+                <label
+                  class="operation-input-label"
+                  for="account-operation-pin-input"
+                >
+                  Confirm PIN
+                </label>
+              </div>
+              <div class="flex-col">
+                <button id="account-operation-btn" class="bankist-btn operation-btn">
+                  &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    },
     getContainer,
+    getComponent,
     transactionsComponent: {
       noTransactionsComponent: {
         containerId: 'transactions-container',
-        componentName: 'No Transactions',
+        componentId: 'no-transactions-container',
         getHtml() {
           return `
           <div
+            id="no-transactions-container"
             class="flex-row justify-center align-center full-width no-transactions-container rounded"
           >
-            <p class="no-transactions">No transactions to show.</p>
+            ${this.getChildHtml()}
           </div>
         `;
         },
+        getChildHtml() {
+          return `<p class="no-transactions">No transactions to show.</p>`;
+        },
         getContainer,
+        getComponent,
       },
       transactionsListComponent: {
         containerId: 'transactions-container',
-        componentName: 'Transactions List',
+        componentId: 'transactions-list-container',
         getHtml() {
           return `
-          <div class="flex-row full-width">
-          <div class="flex-col full-width">
-            <div id="transaction-items-container" class="flex-col full-width transactions-container-scroll"></div>
-            <div id="transaction-controls-container" class="flex-row justify-end"></div>
+          <div id="transactions-list-container" class="flex-col full-width">
+            ${this.getChildHtml()}
           </div>
         `;
         },
+        getChildHtml() {
+          return `
+            <div id="transaction-items-container" class="flex-col full-width transactions-container-scroll"></div>
+            <div id="transaction-controls-container" class="flex-row justify-end"></div>
+          `;
+        },
         getContainer,
+        getComponent,
         transactionListItemComponent: {
           data: {
             type: '',
@@ -302,7 +340,7 @@ const mainComponent = {
             transactionAmount: '',
           },
           containerId: 'transaction-items-container',
-          componentName: 'Transactions List Item',
+          componentId: 'transaction-container',
           getTypeText(type) {
             let currentType = type?.toLowerCase();
 
@@ -334,8 +372,15 @@ const mainComponent = {
           getHtml() {
             return `
             <div
+              id="transaction-container"
               class="flex-row no-shrink align-center transaction-container"
             >
+              ${this.getChildHtml()}
+            </div>
+          `;
+          },
+          getChildHtml() {
+            return `
               <div class="flex-row full-width transaction-type-container">
                 <div class="transaction-type-chip ${this.getTypeCssClass(
                   this.data.type
@@ -357,24 +402,30 @@ const mainComponent = {
                   this.data.transactionAmount
                 )}</p>
               </div>
-            </div>
-          `;
+            `;
           },
           getContainer,
+          getComponent,
         },
         transactionListControlsComponent: {
           containerId: 'transaction-controls-container',
-          componentName: 'Transactions List Controls',
+          componentId: 'transactions-controller-container',
           getHtml() {
             return `
-            <div class="transactions-controller-container">
-              <button class="bankist-btn transactions-controller-btn">
-                &downarrow; Sort
-              </button>
+            <div id="transactions-controller-container" class="transactions-controller-container">
+              ${this.getChildHtml()}
             </div>
           `;
           },
+          getChildHtml() {
+            return `
+              <button class="bankist-btn transactions-controller-btn">
+                &downarrow; Sort
+              </button>
+            `;
+          },
           getContainer,
+          getComponent,
         },
       },
     },
@@ -386,52 +437,63 @@ const mainComponent = {
       interestRate: '',
     },
     containerId: 'main-container',
-    componentName: 'Transaction Summary',
+    componentId: 'transactions-summary-container',
     getHtml() {
       return `
         <section
+          id="transactions-summary-container"
           class="flex-row transactions-summary-container transactions-summary-items-gap"
         >
-          <div class="flex-row align-center transactions-summary-gap">
-            <div>
-              <p class="transactions-summary-title">IN</p>
-            </div>
-            <div>
-              <p class="transaction-summary-amount plus-amount">${formatField(
-                this.data.inAmount
-              )}</p>
-            </div>
-          </div>
-          <div class="flex-row align-center transactions-summary-gap">
-            <div>
-              <p class="transactions-summary-title">OUT</p>
-            </div>
-            <div>
-              <p class="transaction-summary-amount minus-amount">${formatField(
-                this.data.outAmount
-              )}</p>
-            </div>
-          </div>
-          <div class="flex-row align-center transactions-summary-gap">
-            <div>
-              <p class="transactions-summary-title">INTEREST</p>
-            </div>
-            <div>
-              <p class="transaction-summary-amount plus-amount">${formatField(
-                this.data.interestRate
-              )}</p>
-            </div>
-          </div>
+          ${this.getChildHtml()}
         </section>
       `;
     },
+    getChildHtml() {
+      return `
+        <div class="flex-row align-center transactions-summary-gap">
+          <div>
+            <p class="transactions-summary-title">IN</p>
+          </div>
+          <div>
+            <p class="transaction-summary-amount plus-amount">${formatField(
+              this.data.inAmount
+            )}</p>
+          </div>
+        </div>
+        <div class="flex-row align-center transactions-summary-gap">
+          <div>
+            <p class="transactions-summary-title">OUT</p>
+          </div>
+          <div>
+            <p class="transaction-summary-amount minus-amount">${formatField(
+              this.data.outAmount
+            )}</p>
+          </div>
+        </div>
+        <div class="flex-row align-center transactions-summary-gap">
+          <div>
+            <p class="transactions-summary-title">INTEREST</p>
+          </div>
+          <div>
+            <p class="transaction-summary-amount plus-amount">${formatField(
+              this.data.interestRate
+            )}</p>
+          </div>
+        </div>
+      `;
+    },
     getContainer,
+    getComponent,
   },
 };
 
 // Helper Methods
 function getContainer() {
   return document.getElementById(this.containerId);
+}
+
+function getComponent() {
+  return document.getElementById(this.componentId);
 }
 
 function getElement(id) {
@@ -479,12 +541,42 @@ function renderComponent(component, renderPosition = 'beforeend') {
         cleanComponentState(component);
         return true;
       } else {
-        console.error(ERROR_MESSAGES.htmlEmptyError(component.componentName));
+        console.error(ERROR_MESSAGES.htmlEmptyError(component.componentId));
         return false;
       }
     } else {
       console.error(
         ERROR_MESSAGES.containerMissingError(component.containerId)
+      );
+      return false;
+    }
+  } else {
+    console.error(ERROR_MESSAGES.emptyComponentError());
+    return false;
+  }
+}
+
+function updateComponent(component) {
+  if (component) {
+    const componentEl = component.getComponent();
+
+    if (componentEl) {
+      const componentChildHtml = component.getChildHtml();
+
+      if (componentChildHtml) {
+        componentEl.innerHTML = '';
+        componentEl.insertAdjacentHTML('afterbegin', componentChildHtml);
+
+        // Clean Component State
+        cleanComponentState(component);
+        return true;
+      } else {
+        console.error(ERROR_MESSAGES.htmlEmptyError(component.componentId));
+        return false;
+      }
+    } else {
+      console.error(
+        ERROR_MESSAGES.componentMissingError(component.componentId)
       );
       return false;
     }
@@ -501,8 +593,17 @@ function loadComponent(component, renderPosition) {
 
 function cleanComponentState(component) {
   if (component.data) {
-    component.data = {};
+    component.data = undefined;
   }
+}
+
+function updateComponentData(component, data) {
+  const updatedComponent = {
+    ...component,
+    data,
+  };
+
+  return updatedComponent;
 }
 
 function formatField(field) {
@@ -624,7 +725,7 @@ function clearMoneyTransferError() {
 function clearLoanAddError() {
   const [amount] = getLoadAddFields();
 
-  amount.classList.add(ERROR_HIGHLIGHT_STYLE);
+  amount.classList.remove(ERROR_HIGHLIGHT_STYLE);
 }
 
 function clearCloseAccountError() {
@@ -670,36 +771,59 @@ function clearWelcomeUserText() {
 }
 
 // Main Component
-function renderAccountBalance(userAccount, component) {
-  // Set Data
-  component.data = {
-    ...component.data,
+function updateAccountBalanceData(userAccount, component) {
+  const data = {
     balanceDate: '28-09-2025',
     balanceValue: formatCurrency(
       getTotalBalance(userAccount.transactions),
       userAccount.culture
     ),
   };
-  renderComponent(component);
+
+  return updateComponentData(component, data);
 }
 
-function renderTransactionItem(transaction, culture, component) {
+function renderAccountBalance(userAccount, component) {
   // Set Data
-  component.data = {
-    ...component.data,
+  const componentToRender = updateAccountBalanceData(userAccount, component);
+  renderComponent(componentToRender);
+}
+
+function updateAccountBalance(userAccount, component) {
+  // Set Data
+  const componentToRender = updateAccountBalanceData(userAccount, component);
+  updateComponent(componentToRender);
+}
+
+function updateTransactionItemData(transaction, culture, component) {
+  const data = {
     type: getTransactionType(transaction),
     transactionDate: '28-09-2025',
     transactionAmount: formatCurrency(transaction, culture),
   };
-  renderComponent(component);
+
+  return updateComponentData(component, data);
+}
+
+function renderTransactionItem(transaction, culture, component) {
+  // Set Data
+  const componentToRender = updateTransactionItemData(
+    transaction,
+    culture,
+    component
+  );
+  renderComponent(componentToRender);
 }
 
 function renderTransactionItems(transactions, culture, component) {
   clearComponent(component);
 
-  transactions.forEach((transaction) => {
-    renderTransactionItem(transaction, culture, component);
-  });
+  transactions
+    .slice()
+    .reverse()
+    .forEach((transaction) => {
+      renderTransactionItem(transaction, culture, component);
+    });
 }
 
 function renderTransactionListControls(component) {
@@ -739,10 +863,8 @@ function renderTransactionsOperations(userAccount, component) {
   renderTransactions(userAccount, component.transactionsComponent);
 }
 
-function renderTransactionsSummary(userAccount, component) {
-  // Set Data
-  component.data = {
-    ...component.data,
+function updateTransactionSummaryData(userAccount, component) {
+  const data = {
     inAmount: formatCurrency(
       getDepositsBalance(userAccount.transactions),
       userAccount.culture
@@ -757,7 +879,26 @@ function renderTransactionsSummary(userAccount, component) {
       userAccount.culture
     ),
   };
-  renderComponent(component);
+
+  return updateComponentData(component, data);
+}
+
+function updateTransactionsSummary(userAccount, component) {
+  // Set Data
+  const componentToRender = updateTransactionSummaryData(
+    userAccount,
+    component
+  );
+  updateComponent(componentToRender);
+}
+
+function renderTransactionsSummary(userAccount, component) {
+  // Set Data
+  const componentToRender = updateTransactionSummaryData(
+    userAccount,
+    component
+  );
+  renderComponent(componentToRender);
 }
 
 function renderMainComponent(userAccount) {
@@ -770,9 +911,19 @@ function renderMainComponent(userAccount) {
     userAccount,
     mainComponent.transactionsSummaryComponent
   );
-  registerMoneyTransferEventHandlers();
-  registerLoanAddEventHandlers();
-  registerCloseAccountEventHandlers();
+  registerTransactionControlEventHandlers();
+}
+
+function updateMainComponent(userAccount) {
+  updateAccountBalance(userAccount, mainComponent.accountBalanceComponent);
+  renderTransactions(
+    userAccount,
+    mainComponent.transactionsOperationsComponent.transactionsComponent
+  );
+  updateTransactionsSummary(
+    userAccount,
+    mainComponent.transactionsSummaryComponent
+  );
 }
 
 function clearMainComponent() {
@@ -803,6 +954,12 @@ function renderUserAccountDetails(userAccount) {
 }
 
 // Event Handlers
+function registerTransactionControlEventHandlers() {
+  registerMoneyTransferEventHandlers();
+  registerLoanAddEventHandlers();
+  registerCloseAccountEventHandlers();
+}
+
 function registerLoginEventHandlers() {
   const loginBtn = getElement('login-btn');
   loginBtn.addEventListener('click', performLogin);
@@ -835,8 +992,10 @@ function performLogin() {
   const enteredUserName = userName.value;
   const enteredPin = pin.value;
 
+  resetLoginFields();
+
   if (enteredUserName && enteredPin) {
-    const accountToLogin = accounts.find(
+    const accountToLogin = ACCOUNTS.find(
       (account) =>
         account.security.userName === enteredUserName &&
         account.security.pin === enteredPin
@@ -846,22 +1005,20 @@ function performLogin() {
       login(accountToLogin);
     } else {
       showLoginError();
-      resetLoginFields();
       console.info(
-        `Login Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`
+        `Login Failed. Wrong Credentials Entered. Username: ${enteredUserName}, Pin: ${enteredPin}`
       );
     }
   } else {
     showLoginError();
-    resetLoginFields();
     console.info(
-      `Login to Username: ${enteredUserName} Pin: ${enteredPin} cannot be performed.`
+      `Login to Username: ${enteredUserName}, Pin: ${enteredPin} cannot be performed.`
     );
   }
 }
 
 function performLogout() {
-  loggedInUser = undefined;
+  LOGGED_IN_USER = undefined;
   clearWelcomeUserText();
   renderLoginControls();
   clearUserAccountDetails();
@@ -874,13 +1031,18 @@ function performMoneyTransfer() {
   const recipientUserName = recipient.value;
   const transferAmount = Number(amount.value);
 
-  if (recipientUserName && transferAmount > 0) {
+  resetMoneyTransferFields();
+
+  if (
+    recipientUserName &&
+    transferAmount > 0 &&
+    recipientUserName !== LOGGED_IN_USER.security.userName
+  ) {
     transferMoney(recipientUserName, transferAmount);
   } else {
-    resetMoneyTransferFields();
     showMoneyTransferError();
     console.info(
-      `Transfer to Username: ${recipientUserName} Amount: ${transferAmount} cannot be performed.`
+      `Transfer to Username: ${recipientUserName}, Amount: ${transferAmount} cannot be performed.`
     );
   }
 }
@@ -890,11 +1052,13 @@ function performLoanAdd() {
   const [amount] = getLoadAddFields();
 
   const loanAmount = Number(amount.value);
+
+  resetLoanAddFields();
+
   if (loanAmount > 0) {
     loadAdd(loanAmount);
   } else {
     showLoanAddError();
-    resetLoanAddFields();
     console.info(`Loan Add of Amount: ${loanAmount} cannot be performed.`);
   }
 }
@@ -906,51 +1070,52 @@ function performCloseAccount() {
   const enteredUserName = userName.value;
   const enteredPin = pin.value;
 
+  resetCloseAccountFields();
+
   if (enteredUserName && enteredPin) {
     const isValidCredentials =
-      loggedInUser.security.userName === enteredUserName &&
-      loggedInUser.security.pin === enteredPin;
+      LOGGED_IN_USER.security.userName === enteredUserName &&
+      LOGGED_IN_USER.security.pin === enteredPin;
 
     if (isValidCredentials) {
       closeAccount();
     } else {
       showCloseAccountError();
-      resetCloseAccountFields();
       console.info(
-        `Close Account Operation Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`
+        `Close Account Operation Failed. Wrong Credentials Entered. Username: ${enteredUserName}, Pin: ${enteredPin}`
       );
     }
   } else {
     showCloseAccountError();
-    resetCloseAccountFields();
     console.info(
-      `Account of Username: ${enteredUserName} Pin: ${enteredPin} cannot be closed.`
+      `Account of Username: ${enteredUserName}, Pin: ${enteredPin} cannot be closed.`
     );
   }
 }
 
 function login(userAccount) {
-  loggedInUser = userAccount;
+  LOGGED_IN_USER = userAccount;
   showWelcomeUserText(userAccount.owner);
   renderLogoutControls();
   renderUserAccountDetails(userAccount);
 }
 
 function transferMoney(recipientUserName, transferAmount) {
-  const accountToTransfer = accounts.find(
+  const accountToTransfer = ACCOUNTS.find(
     (account) => account.security.userName === recipientUserName
   );
 
   if (accountToTransfer) {
     const loggedInUserAccountBalance = getTotalBalance(
-      loggedInUser.transactions
+      LOGGED_IN_USER.transactions
     );
 
     if (loggedInUserAccountBalance > transferAmount) {
-      loggedInUser.transactions.push(-transferAmount);
+      LOGGED_IN_USER.transactions.push(-transferAmount);
       accountToTransfer.transactions.push(transferAmount);
 
       // Update UI
+      updateMainComponent(LOGGED_IN_USER);
       console.info(
         `Money Transfer of Amount: ${transferAmount} to Username: ${recipientUserName} is successful.`
       );
@@ -963,35 +1128,35 @@ function transferMoney(recipientUserName, transferAmount) {
 }
 
 function loadAdd(loanAmount) {
-  const hasRequiredDeposit = loggedInUser.transactions.some(
+  const hasRequiredDeposit = LOGGED_IN_USER.transactions.some(
     (transaction) => transaction > 0 && transaction > loanAmount * 0.1
   );
 
   if (hasRequiredDeposit) {
-    loggedInUser.transactions.push(loanAmount);
+    LOGGED_IN_USER.transactions.push(loanAmount);
 
     // Update UI
+    updateMainComponent(LOGGED_IN_USER);
     console.info(
-      `User: ${loggedInUser.owner} successfully received a Loan of Amount: ${loanAmount}`
+      `User: ${LOGGED_IN_USER.owner} successfully received a Loan of Amount: ${loanAmount}`
     );
   } else {
     console.info(
-      `User: ${loggedInUser.owner} is not eligible for a Loan of Amount: ${loanAmount}`
+      `User: ${LOGGED_IN_USER.owner} is not eligible for a Loan of Amount: ${loanAmount}`
     );
   }
 }
 
 function closeAccount() {
-  const index = accounts.findIndex(
-    (account) => account.security.userName === loggedInUser.security.userName
+  const index = ACCOUNTS.findIndex(
+    (account) => account.security.userName === LOGGED_IN_USER.security.userName
   );
-  accounts.splice(index, 1);
+  ACCOUNTS.splice(index, 1);
   performLogout();
 }
 
 function initApp() {
-  // performLogout();
-  login(account1);
+  performLogout();
 }
 
 initApp();
