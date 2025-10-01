@@ -5,7 +5,7 @@ const account1 = {
   owner: 'Jonas Schmedtmann',
   transactions: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2,
-  security: { userName: 'jonas', pin: 1111 },
+  security: { userName: 'jonas', pin: '1111' },
   culture: 'GBP',
 };
 
@@ -13,7 +13,7 @@ const account2 = {
   owner: 'Jessica Davis',
   transactions: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
-  security: { userName: 'jess', pin: 2222 },
+  security: { userName: 'jess', pin: '2222' },
   culture: 'USD',
 };
 
@@ -21,7 +21,7 @@ const account3 = {
   owner: 'Steven Thomas Williams',
   transactions: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
-  security: { userName: 'will', pin: 3333 },
+  security: { userName: 'will', pin: '3333' },
   culture: 'GBP',
 };
 
@@ -29,7 +29,7 @@ const account4 = {
   owner: 'Sarah Smith',
   transactions: [430, 1000, 700, 50, 90],
   interestRate: 1,
-  security: { userName: 'sarah', pin: 4444 },
+  security: { userName: 'sarah', pin: '4444' },
   culture: 'GBP',
 };
 
@@ -37,13 +37,15 @@ const account5 = {
   owner: 'Venkatesan Thirumalvalavan',
   transactions: [],
   interestRate: 0.6,
-  security: { userName: 'thiru', pin: 5555 },
+  security: { userName: 'thiru', pin: '5555' },
   culture: 'INR',
 };
 
 const accounts = [account1, account2, account3, account4, account5];
 
 // Global Variables
+let loggedInUser;
+
 const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
 
 const TRANSACTION_TYPE = {
@@ -189,7 +191,7 @@ const mainComponent = {
                   </label>
                 </div>
                 <div class="flex-col">
-                  <button id="transfer-operation-btn" class="operation-btn">
+                  <button id="transfer-operation-btn" class="bankist-btn operation-btn">
                     &rarr;
                   </button>
                 </div>
@@ -216,7 +218,7 @@ const mainComponent = {
                   </label>
                 </div>
                 <div class="flex-col">
-                  <button id="loan-operation-btn" class="operation-btn">&rarr;</button>
+                  <button id="loan-operation-btn" class="bankist-btn operation-btn">&rarr;</button>
                 </div>
               </div>
             </div>
@@ -254,7 +256,7 @@ const mainComponent = {
                   </label>
                 </div>
                 <div class="flex-col">
-                  <button id="account-operation-btn" class="operation-btn">
+                  <button id="account-operation-btn" class="bankist-btn operation-btn">
                     &rarr;
                   </button>
                 </div>
@@ -525,15 +527,54 @@ function getTransactionType(transactionAmount) {
     : TRANSACTION_TYPE.Withdrawal;
 }
 
-function getLoginFields() {
-  const userName = getElement('login-username-input');
-  const pin = getElement('login-pin-input');
+function getFields(...fieldIds) {
+  return fieldIds.map((id) => getElement(id));
+}
 
-  return [userName, pin];
+function getLoginFields() {
+  return getFields('login-username-input', 'login-pin-input');
+}
+
+function getMoneyTransferFields() {
+  return getFields(
+    'transfer-operation-recipient-input',
+    'transfer-operation-amount-input'
+  );
+}
+
+function getLoadAddFields() {
+  return getFields('loan-operation-amount-input');
+}
+
+function getCloseAccountFields() {
+  return getFields(
+    'account-operation-username-input',
+    'account-operation-pin-input'
+  );
 }
 
 function resetLoginFields() {
   const [userName, pin] = getLoginFields();
+
+  userName.value = '';
+  pin.value = '';
+}
+
+function resetMoneyTransferFields() {
+  const [recipient, amount] = getMoneyTransferFields();
+
+  recipient.value = '';
+  amount.value = '';
+}
+
+function resetLoanAddFields() {
+  const [amount] = getLoadAddFields();
+
+  amount.value = '';
+}
+
+function resetCloseAccountFields() {
+  const [userName, pin] = getCloseAccountFields();
 
   userName.value = '';
   pin.value = '';
@@ -544,6 +585,53 @@ function showLoginError() {
 
   userName.classList.add(ERROR_HIGHLIGHT_STYLE);
   pin.classList.add(ERROR_HIGHLIGHT_STYLE);
+}
+
+function showMoneyTransferError() {
+  const [recipient, amount] = getMoneyTransferFields();
+
+  recipient.classList.add(ERROR_HIGHLIGHT_STYLE);
+  amount.classList.add(ERROR_HIGHLIGHT_STYLE);
+}
+
+function showLoanAddError() {
+  const [amount] = getLoadAddFields();
+
+  amount.classList.add(ERROR_HIGHLIGHT_STYLE);
+}
+
+function showCloseAccountError() {
+  const [userName, pin] = getCloseAccountFields();
+
+  userName.classList.add(ERROR_HIGHLIGHT_STYLE);
+  pin.classList.add(ERROR_HIGHLIGHT_STYLE);
+}
+
+function clearLoginError() {
+  const [userName, pin] = getLoginFields();
+
+  userName.classList.remove(ERROR_HIGHLIGHT_STYLE);
+  pin.classList.remove(ERROR_HIGHLIGHT_STYLE);
+}
+
+function clearMoneyTransferError() {
+  const [recipient, amount] = getMoneyTransferFields();
+
+  recipient.classList.remove(ERROR_HIGHLIGHT_STYLE);
+  amount.classList.remove(ERROR_HIGHLIGHT_STYLE);
+}
+
+function clearLoanAddError() {
+  const [amount] = getLoadAddFields();
+
+  amount.classList.add(ERROR_HIGHLIGHT_STYLE);
+}
+
+function clearCloseAccountError() {
+  const [userName, pin] = getCloseAccountFields();
+
+  userName.classList.remove(ERROR_HIGHLIGHT_STYLE);
+  pin.classList.remove(ERROR_HIGHLIGHT_STYLE);
 }
 
 function getTotalBalance(transactions) {
@@ -672,25 +760,31 @@ function renderTransactionsSummary(userAccount, component) {
   renderComponent(component);
 }
 
-function renderMainComponent(userAccount, component) {
-  renderAccountBalance(userAccount, component.accountBalanceComponent);
+function renderMainComponent(userAccount) {
+  renderAccountBalance(userAccount, mainComponent.accountBalanceComponent);
   renderTransactionsOperations(
     userAccount,
-    component.transactionsOperationsComponent
+    mainComponent.transactionsOperationsComponent
   );
   renderTransactionsSummary(
     userAccount,
-    component.transactionsSummaryComponent
+    mainComponent.transactionsSummaryComponent
   );
-}
-
-// Component renderers
-function clearUserControls() {
-  clearComponent(userControlsComponent);
+  registerMoneyTransferEventHandlers();
+  registerLoanAddEventHandlers();
+  registerCloseAccountEventHandlers();
 }
 
 function clearMainComponent() {
   clearComponent(mainComponent);
+}
+
+function clearUserControls() {
+  clearComponent(userControlsComponent);
+}
+
+function clearUserAccountDetails() {
+  clearMainComponent();
 }
 
 function renderLoginControls() {
@@ -705,13 +799,10 @@ function renderLogoutControls() {
 
 function renderUserAccountDetails(userAccount) {
   clearUserAccountDetails();
-  renderMainComponent(userAccount, mainComponent);
+  renderMainComponent(userAccount);
 }
 
-function clearUserAccountDetails() {
-  clearMainComponent();
-}
-
+// Event Handlers
 function registerLoginEventHandlers() {
   const loginBtn = getElement('login-btn');
   loginBtn.addEventListener('click', performLogin);
@@ -722,43 +813,185 @@ function registerLogoutEventHandlers() {
   loginBtn.addEventListener('click', performLogout);
 }
 
+function registerMoneyTransferEventHandlers() {
+  const moneyTransferBtn = getElement('transfer-operation-btn');
+  moneyTransferBtn.addEventListener('click', performMoneyTransfer);
+}
+
+function registerLoanAddEventHandlers() {
+  const loanAddBtn = getElement('loan-operation-btn');
+  loanAddBtn.addEventListener('click', performLoanAdd);
+}
+
+function registerCloseAccountEventHandlers() {
+  const closeAccountBtn = getElement('account-operation-btn');
+  closeAccountBtn.addEventListener('click', performCloseAccount);
+}
+
 function performLogin() {
+  clearLoginError();
   const [userName, pin] = getLoginFields();
 
   const enteredUserName = userName.value;
   const enteredPin = pin.value;
 
-  const accountToLogin = accounts.find(
-    (account) =>
-      account.security.userName === enteredUserName &&
-      account.security.pin == enteredPin
-  );
+  if (enteredUserName && enteredPin) {
+    const accountToLogin = accounts.find(
+      (account) =>
+        account.security.userName === enteredUserName &&
+        account.security.pin === enteredPin
+    );
 
-  if (accountToLogin) {
-    onLogin(accountToLogin);
+    if (accountToLogin) {
+      login(accountToLogin);
+    } else {
+      showLoginError();
+      resetLoginFields();
+      console.info(
+        `Login Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`
+      );
+    }
   } else {
     showLoginError();
     resetLoginFields();
     console.info(
-      `Login Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`
+      `Login to Username: ${enteredUserName} Pin: ${enteredPin} cannot be performed.`
     );
   }
 }
 
 function performLogout() {
+  loggedInUser = undefined;
   clearWelcomeUserText();
   renderLoginControls();
   clearUserAccountDetails();
 }
 
-function onLogin(userAccount) {
+function performMoneyTransfer() {
+  clearMoneyTransferError();
+  const [recipient, amount] = getMoneyTransferFields();
+
+  const recipientUserName = recipient.value;
+  const transferAmount = Number(amount.value);
+
+  if (recipientUserName && transferAmount > 0) {
+    transferMoney(recipientUserName, transferAmount);
+  } else {
+    resetMoneyTransferFields();
+    showMoneyTransferError();
+    console.info(
+      `Transfer to Username: ${recipientUserName} Amount: ${transferAmount} cannot be performed.`
+    );
+  }
+}
+
+function performLoanAdd() {
+  clearLoanAddError();
+  const [amount] = getLoadAddFields();
+
+  const loanAmount = Number(amount.value);
+  if (loanAmount > 0) {
+    loadAdd(loanAmount);
+  } else {
+    showLoanAddError();
+    resetLoanAddFields();
+    console.info(`Loan Add of Amount: ${loanAmount} cannot be performed.`);
+  }
+}
+
+function performCloseAccount() {
+  clearCloseAccountError();
+  const [userName, pin] = getCloseAccountFields();
+
+  const enteredUserName = userName.value;
+  const enteredPin = pin.value;
+
+  if (enteredUserName && enteredPin) {
+    const isValidCredentials =
+      loggedInUser.security.userName === enteredUserName &&
+      loggedInUser.security.pin === enteredPin;
+
+    if (isValidCredentials) {
+      closeAccount();
+    } else {
+      showCloseAccountError();
+      resetCloseAccountFields();
+      console.info(
+        `Close Account Operation Failed. Wrong Credentials Entered. Username: ${enteredUserName} Pin: ${enteredPin}`
+      );
+    }
+  } else {
+    showCloseAccountError();
+    resetCloseAccountFields();
+    console.info(
+      `Account of Username: ${enteredUserName} Pin: ${enteredPin} cannot be closed.`
+    );
+  }
+}
+
+function login(userAccount) {
+  loggedInUser = userAccount;
   showWelcomeUserText(userAccount.owner);
   renderLogoutControls();
   renderUserAccountDetails(userAccount);
 }
 
-function initApp() {
+function transferMoney(recipientUserName, transferAmount) {
+  const accountToTransfer = accounts.find(
+    (account) => account.security.userName === recipientUserName
+  );
+
+  if (accountToTransfer) {
+    const loggedInUserAccountBalance = getTotalBalance(
+      loggedInUser.transactions
+    );
+
+    if (loggedInUserAccountBalance > transferAmount) {
+      loggedInUser.transactions.push(-transferAmount);
+      accountToTransfer.transactions.push(transferAmount);
+
+      // Update UI
+      console.info(
+        `Money Transfer of Amount: ${transferAmount} to Username: ${recipientUserName} is successful.`
+      );
+    } else {
+      console.info('Money Transfer Failed. Insufficient Funds.');
+    }
+  } else {
+    console.info(`Username: ${recipientUserName} does not exist.`);
+  }
+}
+
+function loadAdd(loanAmount) {
+  const hasRequiredDeposit = loggedInUser.transactions.some(
+    (transaction) => transaction > 0 && transaction > loanAmount * 0.1
+  );
+
+  if (hasRequiredDeposit) {
+    loggedInUser.transactions.push(loanAmount);
+
+    // Update UI
+    console.info(
+      `User: ${loggedInUser.owner} successfully received a Loan of Amount: ${loanAmount}`
+    );
+  } else {
+    console.info(
+      `User: ${loggedInUser.owner} is not eligible for a Loan of Amount: ${loanAmount}`
+    );
+  }
+}
+
+function closeAccount() {
+  const index = accounts.findIndex(
+    (account) => account.security.userName === loggedInUser.security.userName
+  );
+  accounts.splice(index, 1);
   performLogout();
+}
+
+function initApp() {
+  // performLogout();
+  login(account1);
 }
 
 initApp();
