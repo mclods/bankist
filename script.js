@@ -44,8 +44,6 @@ const account5 = {
 const ACCOUNTS = [account1, account2, account3, account4, account5];
 
 // Global Variables
-let LOGGED_IN_USER;
-
 const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
 
 const TRANSACTION_TYPE = {
@@ -57,6 +55,11 @@ const CURRENCY_CODES = {
   GBP: '€',
   USD: '$',
   INR: '₹',
+};
+
+const SORTING_DIRECTION = {
+  ASC: 'ascending',
+  DESC: 'descending',
 };
 
 const ERROR_MESSAGES = {
@@ -73,6 +76,10 @@ const ERROR_MESSAGES = {
     return `Component with ID: ${componentId} does not have a valid HTML.`;
   },
 };
+
+let LOGGED_IN_USER;
+
+let SORTING_POSITION = SORTING_DIRECTION.DESC;
 
 // Global DOM Elements
 const welcomeUserTitleEl = document.getElementById('welcome-user-title');
@@ -408,6 +415,9 @@ const mainComponent = {
           getComponent,
         },
         transactionListControlsComponent: {
+          data: {
+            sortingDirection: '',
+          },
           containerId: 'transaction-controls-container',
           componentId: 'transactions-controller-container',
           getHtml() {
@@ -419,8 +429,8 @@ const mainComponent = {
           },
           getChildHtml() {
             return `
-              <button class="bankist-btn transactions-controller-btn">
-                &downarrow; Sort
+              <button id="sort-transactions-btn" class="bankist-btn transactions-controller-btn">
+                ${this.data.sortingDirection} Sort
               </button>
             `;
           },
@@ -505,14 +515,6 @@ function getElement(id) {
     console.error(`Element with ID: ${id} does not exist in the DOM.`);
     return undefined;
   }
-}
-
-function getPascalCase(text) {
-  return text[0].toUpperCase() + text.slice(1);
-}
-
-function getWelcomeUserText(userName) {
-  return `Hi ${userName}`;
 }
 
 function clearComponent(component) {
@@ -606,6 +608,14 @@ function updateComponentData(component, data) {
   return updatedComponent;
 }
 
+function getPascalCase(text) {
+  return text[0].toUpperCase() + text.slice(1);
+}
+
+function getWelcomeUserText(userName) {
+  return `Hi ${userName}`;
+}
+
 function formatField(field) {
   return field ?? '';
 }
@@ -626,6 +636,16 @@ function getTransactionType(transactionAmount) {
   return transactionAmount >= 0
     ? TRANSACTION_TYPE.Deposit
     : TRANSACTION_TYPE.Withdrawal;
+}
+
+function getSortingArrow(sortingDirection) {
+  if (sortingDirection === SORTING_DIRECTION.ASC) {
+    return '&uparrow;';
+  } else if (sortingDirection === SORTING_DIRECTION.DESC) {
+    return '&downarrow;';
+  } else {
+    console.error('Sorting direction is invalid.');
+  }
 }
 
 function getFields(...fieldIds) {
@@ -771,7 +791,7 @@ function clearWelcomeUserText() {
 }
 
 // Main Component
-function updateAccountBalanceData(userAccount, component) {
+function updateAccountBalanceData(component, userAccount) {
   const data = {
     balanceDate: '28-09-2025',
     balanceValue: formatCurrency(
@@ -783,19 +803,19 @@ function updateAccountBalanceData(userAccount, component) {
   return updateComponentData(component, data);
 }
 
-function renderAccountBalance(userAccount, component) {
+function renderAccountBalance(component, userAccount) {
   // Set Data
-  const componentToRender = updateAccountBalanceData(userAccount, component);
+  const componentToRender = updateAccountBalanceData(component, userAccount);
   renderComponent(componentToRender);
 }
 
-function updateAccountBalance(userAccount, component) {
+function updateAccountBalance(component, userAccount) {
   // Set Data
-  const componentToRender = updateAccountBalanceData(userAccount, component);
+  const componentToRender = updateAccountBalanceData(component, userAccount);
   updateComponent(componentToRender);
 }
 
-function updateTransactionItemData(transaction, culture, component) {
+function updateTransactionItemData(component, transaction, culture) {
   const data = {
     type: getTransactionType(transaction),
     transactionDate: '28-09-2025',
@@ -805,65 +825,75 @@ function updateTransactionItemData(transaction, culture, component) {
   return updateComponentData(component, data);
 }
 
-function renderTransactionItem(transaction, culture, component) {
+function renderTransactionItem(component, transaction, culture) {
   // Set Data
   const componentToRender = updateTransactionItemData(
+    component,
     transaction,
-    culture,
-    component
+    culture
   );
   renderComponent(componentToRender);
 }
 
-function renderTransactionItems(transactions, culture, component) {
+function renderTransactionItems(component, transactions, culture) {
   clearComponent(component);
 
   transactions
     .slice()
     .reverse()
     .forEach((transaction) => {
-      renderTransactionItem(transaction, culture, component);
+      renderTransactionItem(component, transaction, culture);
     });
 }
 
-function renderTransactionListControls(component) {
-  loadComponent(component);
+function updateTransactionListControlsData(component) {
+  const data = {
+    sortingDirection: getSortingArrow(SORTING_POSITION),
+  };
+
+  return updateComponentData(component, data);
 }
 
-function renderTransactionList(transactions, culture, component) {
+function renderTransactionListControls(component) {
+  // Set Data
+  const componentToRender = updateTransactionListControlsData(component);
+  loadComponent(componentToRender);
+}
+
+function renderTransactionList(component, transactions, culture) {
   loadComponent(component);
 
   // Render Child Components
   renderTransactionItems(
+    component.transactionListItemComponent,
     transactions,
-    culture,
-    component.transactionListItemComponent
+    culture
   );
   renderTransactionListControls(component.transactionListControlsComponent);
 }
 
-function renderTransactions(userAccount, component) {
+function renderTransactions(component, userAccount) {
   const hasTransactions = userAccount.transactions.length > 0;
 
   if (hasTransactions) {
     renderTransactionList(
+      component.transactionsListComponent,
       userAccount.transactions,
-      userAccount.culture,
-      component.transactionsListComponent
+      userAccount.culture
     );
   } else {
     loadComponent(component.noTransactionsComponent);
   }
 }
 
-function renderTransactionsOperations(userAccount, component) {
+function renderTransactionsOperations(component, userAccount) {
   renderComponent(component);
 
   // Render Child Components
-  renderTransactions(userAccount, component.transactionsComponent);
+  renderTransactions(component.transactionsComponent, userAccount);
 }
 
-function updateTransactionSummaryData(userAccount, component) {
+function updateTransactionSummaryData(component, userAccount) {
   const data = {
     inAmount: formatCurrency(
       getDepositsBalance(userAccount.transactions),
@@ -883,47 +913,56 @@ function updateTransactionSummaryData(userAccount, component) {
   return updateComponentData(component, data);
 }
 
-function updateTransactionsSummary(userAccount, component) {
+function updateTransactionsSummary(component, userAccount) {
   // Set Data
   const componentToRender = updateTransactionSummaryData(
-    userAccount,
-    component
+    component,
+    userAccount
   );
   updateComponent(componentToRender);
 }
 
-function renderTransactionsSummary(userAccount, component) {
+function renderTransactionsSummary(component, userAccount) {
   // Set Data
   const componentToRender = updateTransactionSummaryData(
-    userAccount,
-    component
+    component,
+    userAccount
   );
   renderComponent(componentToRender);
 }
 
 function renderMainComponent(userAccount) {
-  renderAccountBalance(userAccount, mainComponent.accountBalanceComponent);
+  renderAccountBalance(mainComponent.accountBalanceComponent, userAccount);
   renderTransactionsOperations(
-    userAccount,
-    mainComponent.transactionsOperationsComponent
+    mainComponent.transactionsOperationsComponent,
+    userAccount
   );
   renderTransactionsSummary(
-    userAccount,
-    mainComponent.transactionsSummaryComponent
+    mainComponent.transactionsSummaryComponent,
+    userAccount
   );
-  registerTransactionControlEventHandlers();
+  registerMainComponentEventHandlers();
 }
 
 function updateMainComponent(userAccount) {
-  updateAccountBalance(userAccount, mainComponent.accountBalanceComponent);
+  updateAccountBalance(mainComponent.accountBalanceComponent, userAccount);
   renderTransactions(
-    userAccount,
-    mainComponent.transactionsOperationsComponent.transactionsComponent
+    mainComponent.transactionsOperationsComponent.transactionsComponent,
+    userAccount
   );
   updateTransactionsSummary(
-    userAccount,
-    mainComponent.transactionsSummaryComponent
+    mainComponent.transactionsSummaryComponent,
+    userAccount
   );
+  registerTransactionsControlEventHandlers();
+}
+
+function updateTransactions(userAccount) {
+  renderTransactions(
+    mainComponent.transactionsOperationsComponent.transactionsComponent,
+    userAccount
+  );
+  registerTransactionsControlEventHandlers();
 }
 
 function clearMainComponent() {
@@ -954,10 +993,11 @@ function renderUserAccountDetails(userAccount) {
 }
 
 // Event Handlers
-function registerTransactionControlEventHandlers() {
+function registerMainComponentEventHandlers() {
   registerMoneyTransferEventHandlers();
   registerLoanAddEventHandlers();
   registerCloseAccountEventHandlers();
+  registerTransactionsControlEventHandlers();
 }
 
 function registerLoginEventHandlers() {
@@ -983,6 +1023,13 @@ function registerLoanAddEventHandlers() {
 function registerCloseAccountEventHandlers() {
   const closeAccountBtn = getElement('account-operation-btn');
   closeAccountBtn.addEventListener('click', performCloseAccount);
+}
+
+function registerTransactionsControlEventHandlers() {
+  if (LOGGED_IN_USER.transactions.length > 0) {
+    const sortBtn = getElement('sort-transactions-btn');
+    sortBtn.addEventListener('click', performSort);
+  }
 }
 
 function performLogin() {
@@ -1022,6 +1069,30 @@ function performLogout() {
   clearWelcomeUserText();
   renderLoginControls();
   clearUserAccountDetails();
+}
+
+function performSort() {
+  let sortedTransactions;
+
+  if (SORTING_POSITION === SORTING_DIRECTION.ASC) {
+    sortedTransactions = LOGGED_IN_USER.transactions
+      .slice()
+      .sort((a, b) => b - a);
+    SORTING_POSITION = SORTING_DIRECTION.DESC;
+  } else if (SORTING_POSITION === SORTING_DIRECTION.DESC) {
+    sortedTransactions = LOGGED_IN_USER.transactions
+      .slice()
+      .sort((a, b) => a - b);
+    SORTING_POSITION = SORTING_DIRECTION.ASC;
+  } else {
+    console.error('Sorting Position is invalid.');
+  }
+
+  // Update UI
+  updateTransactions({
+    ...LOGGED_IN_USER,
+    transactions: sortedTransactions,
+  });
 }
 
 function performMoneyTransfer() {
@@ -1156,7 +1227,8 @@ function closeAccount() {
 }
 
 function initApp() {
-  performLogout();
+  // performLogout();
+  login(account1);
 }
 
 initApp();
