@@ -1227,8 +1227,7 @@ function closeAccount() {
 }
 
 function initApp() {
-  // performLogout();
-  login(account1);
+  performLogout();
 }
 
 initApp();
