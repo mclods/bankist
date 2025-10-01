@@ -45,6 +45,8 @@ const ACCOUNTS = [account1, account2, account3, account4, account5];
 
 // Global Variables
 const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
+const ROTATE_STYLE = 'rotate';
+const ROTATE_TIME_SECONDS = 0.5;
 
 const TRANSACTION_TYPE = {
   Deposit: 'deposit',
@@ -83,6 +85,7 @@ let SORTING_POSITION = SORTING_DIRECTION.DESC;
 
 // Global DOM Elements
 const welcomeUserTitleEl = document.getElementById('welcome-user-title');
+const appLogo = document.querySelector('.logo-img');
 
 // Global Components
 const userControlsComponent = {
@@ -1226,8 +1229,19 @@ function closeAccount() {
   performLogout();
 }
 
+function loadEasterEgg() {
+  appLogo.addEventListener('click', () => {
+    appLogo.classList.add(ROTATE_STYLE);
+
+    setTimeout(() => {
+      appLogo.classList.remove(ROTATE_STYLE);
+    }, ROTATE_TIME_SECONDS * 1000);
+  });
+}
+
 function initApp() {
   performLogout();
+  loadEasterEgg();
 }
 
 initApp();
