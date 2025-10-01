@@ -619,7 +619,7 @@ function formatCurrency(value, culture) {
     return value;
   }
 
-  return `${value}${CURRENCY_CODES[culture]}`;
+  return `${value}${CURRENCY_CODES[culture] ?? ''}`;
 }
 
 function getTransactionType(transactionAmount) {
