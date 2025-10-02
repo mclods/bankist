@@ -367,6 +367,10 @@ footer {
   background-color: #a5a5a5;
 }
 
+.footer-content-gap {
+  row-gap: 0.2rem;
+}
+
 .session-text {
   font-size: 0.9rem;
   color: #fff;
