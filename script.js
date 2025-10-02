@@ -15,7 +15,7 @@ const account1 = {
   ],
   interestRate: 1.2,
   security: { userName: 'jonas', pin: '1111' },
-  culture: { currencyCode: 'GBP', locale: 'en-GB' },
+  culture: { currencyCode: 'EUR', locale: 'de-DE' },
 };
 
 const account2 = {
@@ -90,7 +90,7 @@ const TRANSACTION_TYPE = {
 };
 
 const CURRENCY_CODES = {
-  GBP: '€',
+  EUR: '€',
   USD: '$',
   INR: '₹',
   MGA: 'Ar',
