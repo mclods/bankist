@@ -355,10 +355,12 @@ body {
 }
 
 .plus-amount {
+  text-transform: none;
   color: #66c873;
 }
 
 .minus-amount {
+  text-transform: none;
   color: #f5465d;
 }
 

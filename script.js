@@ -15,7 +15,7 @@ const account1 = {
   ],
   interestRate: 1.2,
   security: { userName: 'jonas', pin: '1111' },
-  culture: { currencyCode: 'GBP' },
+  culture: { currencyCode: 'GBP', locale: 'en-GB' },
 };
 
 const account2 = {
@@ -32,7 +32,7 @@ const account2 = {
   ],
   interestRate: 1.5,
   security: { userName: 'jess', pin: '2222' },
-  culture: { currencyCode: 'USD' },
+  culture: { currencyCode: 'USD', locale: 'en-US' },
 };
 
 const account3 = {
@@ -49,7 +49,7 @@ const account3 = {
   ],
   interestRate: 0.7,
   security: { userName: 'will', pin: '3333' },
-  culture: { currencyCode: 'GBP' },
+  culture: { currencyCode: 'MGA', locale: 'en-MG' },
 };
 
 const account4 = {
@@ -63,7 +63,7 @@ const account4 = {
   ],
   interestRate: 1,
   security: { userName: 'sarah', pin: '4444' },
-  culture: { currencyCode: 'GBP' },
+  culture: { currencyCode: 'SGD', locale: 'en-SG' },
 };
 
 const account5 = {
@@ -71,7 +71,7 @@ const account5 = {
   transactions: [],
   interestRate: 0.6,
   security: { userName: 'thiru', pin: '5555' },
-  culture: { currencyCode: 'INR' },
+  culture: { currencyCode: 'INR', locale: 'en-IN' },
 };
 
 const ACCOUNTS = [account1, account2, account3, account4, account5];
@@ -93,6 +93,8 @@ const CURRENCY_CODES = {
   GBP: '€',
   USD: '$',
   INR: '₹',
+  MGA: 'Ar',
+  SGD: 'S$',
 };
 
 const SORTING_DIRECTION = {
@@ -654,48 +656,77 @@ function formatField(field) {
   return field ?? '';
 }
 
-function formatCurrency(value, currencyCode) {
-  let formattedCurrency;
+function formatCurrency(currency, culture) {
+  let currencyWithPrecision;
 
-  if (value === null || value === undefined) {
+  if (currency === null || currency === undefined) {
     console.error('Currency value is nullish.');
     return '';
   }
 
-  formattedCurrency = value.toFixed(CURRENCY_PRECISION);
+  currencyWithPrecision = currency.toFixed(CURRENCY_PRECISION);
 
-  if (currencyCode === null || currencyCode === undefined) {
+  if (culture === null || culture === undefined) {
     console.error('Currency Code is nullish.');
-    return formattedCurrency;
+    return currencyWithPrecision;
   }
 
-  return `${formattedCurrency}${CURRENCY_CODES[currencyCode] ?? ''}`;
+  // return `${currencyWithPrecision}${CURRENCY_CODES[culture.currencyCode] ?? ''}`;
+
+  const options = {
+    style: 'currency',
+    currency: culture.currencyCode,
+  };
+
+  return Intl.NumberFormat(culture.locale, options).format(
+    currencyWithPrecision
+  );
 }
 
 function getCurrentDateTimeCultureFormatted(culture) {
   const now = new Date();
 
-  const date = `${now.getDate()}`.padStart(2, 0);
-  const month = `${now.getMonth() + 1}`.padStart(2, 0);
-  const year = now.getFullYear();
+  // const date = `${now.getDate()}`.padStart(2, 0);
+  // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+  // const year = now.getFullYear();
 
-  const hours = `${now.getHours()}`.padStart(2, 0);
-  const minutes = `${now.getMinutes()}`.padStart(2, 0);
+  // const hours = `${now.getHours()}`.padStart(2, 0);
+  // const minutes = `${now.getMinutes()}`.padStart(2, 0);
 
-  return `${date}-${month}-${year} ${hours}:${minutes}`;
+  // return `${date}-${month}-${year} ${hours}:${minutes}`;
+
+  const options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+
+  return Intl.DateTimeFormat(culture.locale, options).format(now);
 }
 
 function getDateTimeCultureFormatted(dateTimeISOString, culture) {
   const now = new Date(dateTimeISOString);
 
-  const date = `${now.getDate()}`.padStart(2, 0);
-  const month = `${now.getMonth() + 1}`.padStart(2, 0);
-  const year = now.getFullYear();
+  // const date = `${now.getDate()}`.padStart(2, 0);
+  // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+  // const year = now.getFullYear();
 
-  const hours = `${now.getHours()}`.padStart(2, 0);
-  const minutes = `${now.getMinutes()}`.padStart(2, 0);
+  // const hours = `${now.getHours()}`.padStart(2, 0);
+  // const minutes = `${now.getMinutes()}`.padStart(2, 0);
 
-  return `${date}-${month}-${year} ${hours}:${minutes}`;
+  // return `${date}-${month}-${year} ${hours}:${minutes}`;
+
+  const options = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+
+  return Intl.DateTimeFormat(culture.locale, options).format(now);
 }
 
 function getCurrentDateTimeISOFormatted() {
@@ -872,7 +903,7 @@ function updateAccountBalanceData(component, userAccount) {
       getTotalBalance(
         userAccount.transactions.flatMap((transaction) => transaction.amount)
       ),
-      userAccount.culture.currencyCode
+      userAccount.culture
     ),
   };
 
@@ -894,8 +925,11 @@ function updateAccountBalance(component, userAccount) {
 function updateTransactionItemData(component, transaction, culture, styles) {
   const data = {
     type: getTransactionType(transaction.amount),
-    transactionDate: getDateTimeCultureFormatted(transaction.transactionDate),
-    transactionAmount: formatCurrency(transaction.amount, culture.currencyCode),
+    transactionDate: getDateTimeCultureFormatted(
+      transaction.transactionDate,
+      culture
+    ),
+    transactionAmount: formatCurrency(transaction.amount, culture),
     styles,
   };
 
@@ -984,20 +1018,20 @@ function updateTransactionSummaryData(component, userAccount) {
       getDepositsBalance(
         userAccount.transactions.flatMap((transaction) => transaction.amount)
       ),
-      userAccount.culture.currencyCode
+      userAccount.culture
     ),
     outAmount: formatCurrency(
       getWithdrawalsBalance(
         userAccount.transactions.flatMap((transaction) => transaction.amount)
       ),
-      userAccount.culture.currencyCode
+      userAccount.culture
     ),
     interestEarned: formatCurrency(
       getTotalBalance(
         userAccount.transactions.flatMap((transaction) => transaction.amount)
       ) *
         (userAccount.interestRate / 100),
-      userAccount.culture.currencyCode
+      userAccount.culture
     ),
   };
 
