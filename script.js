@@ -1337,8 +1337,7 @@ function loadEasterEgg() {
 }
 
 function initApp() {
-  // performLogout();
-  login(account1);
+  performLogout();
   loadEasterEgg();
 }
 
