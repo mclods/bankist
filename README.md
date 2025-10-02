@@ -2,11 +2,11 @@
 
 bankist is a simple bank ui.
 
-### Architecture:
+## Architecture
 
 ![bankist architecture](diagrams/bankist-app-architecture.jpg)
 
-### Features:
+## Features
 
 1. Supports bare-metal conditional rendering similar to React.
 2. Supports login/logout.

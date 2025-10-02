@@ -3,34 +3,67 @@
 // Account Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  transactions: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  transactions: [
+    { amount: 200, transactionDate: '2025-09-30T23:30:48' },
+    { amount: 450, transactionDate: '2025-01-06T01:57:50' },
+    { amount: -400, transactionDate: '2025-08-02T18:10:43' },
+    { amount: 3000, transactionDate: '2025-06-04T05:31:03' },
+    { amount: -650, transactionDate: '2025-04-22T16:37:24' },
+    { amount: -130, transactionDate: '2025-09-21T16:09:27' },
+    { amount: 70, transactionDate: '2025-02-17T21:57:09' },
+    { amount: 1300, transactionDate: '2025-10-02T12:23:41' },
+  ],
   interestRate: 1.2,
   security: { userName: 'jonas', pin: '1111' },
-  culture: 'GBP',
+  culture: { currencyCode: 'GBP' },
 };
 
 const account2 = {
   owner: 'Jessica Davis',
-  transactions: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  transactions: [
+    { amount: 5000, transactionDate: '2025-01-12T18:39:27' },
+    { amount: 3400, transactionDate: '2025-06-30T07:50:44' },
+    { amount: -150, transactionDate: '2025-09-21T05:59:29' },
+    { amount: -790, transactionDate: '2025-05-02T00:57:48' },
+    { amount: -3210, transactionDate: '2025-01-06T20:44:52' },
+    { amount: -1000, transactionDate: '2025-06-28T03:17:31' },
+    { amount: 8500, transactionDate: '2025-02-28T05:00:11' },
+    { amount: -30, transactionDate: '2025-06-17T02:35:19' },
+  ],
   interestRate: 1.5,
   security: { userName: 'jess', pin: '2222' },
-  culture: 'USD',
+  culture: { currencyCode: 'USD' },
 };
 
 const account3 = {
   owner: 'Steven Thomas Williams',
-  transactions: [200, -200, 340, -300, -20, 50, 400, -460],
+  transactions: [
+    { amount: 200, transactionDate: '2025-08-25T09:16:43' },
+    { amount: -200, transactionDate: '2025-09-04T19:13:00' },
+    { amount: 340, transactionDate: '2025-05-07T02:42:12' },
+    { amount: -300, transactionDate: '2025-05-14T02:32:11' },
+    { amount: -20, transactionDate: '2025-09-12T05:09:59' },
+    { amount: 50, transactionDate: '2025-04-14T20:30:08' },
+    { amount: 400, transactionDate: '2025-04-05T10:10:15' },
+    { amount: -460, transactionDate: '2025-03-23T01:19:44' },
+  ],
   interestRate: 0.7,
   security: { userName: 'will', pin: '3333' },
-  culture: 'GBP',
+  culture: { currencyCode: 'GBP' },
 };
 
 const account4 = {
   owner: 'Sarah Smith',
-  transactions: [430, 1000, 700, 50, 90],
+  transactions: [
+    { amount: 430, transactionDate: '2025-06-15T21:12:18' },
+    { amount: 1000, transactionDate: '2025-05-17T11:54:24' },
+    { amount: 700, transactionDate: '2025-03-15T16:01:36' },
+    { amount: 50, transactionDate: '2025-04-29T19:03:21' },
+    { amount: 90, transactionDate: '2025-07-27T18:29:10' },
+  ],
   interestRate: 1,
   security: { userName: 'sarah', pin: '4444' },
-  culture: 'GBP',
+  culture: { currencyCode: 'GBP' },
 };
 
 const account5 = {
@@ -38,7 +71,7 @@ const account5 = {
   transactions: [],
   interestRate: 0.6,
   security: { userName: 'thiru', pin: '5555' },
-  culture: 'INR',
+  culture: { currencyCode: 'INR' },
 };
 
 const ACCOUNTS = [account1, account2, account3, account4, account5];
@@ -621,7 +654,7 @@ function formatField(field) {
   return field ?? '';
 }
 
-function formatCurrency(value, culture) {
+function formatCurrency(value, currencyCode) {
   let formattedCurrency;
 
   if (value === null || value === undefined) {
@@ -631,12 +664,42 @@ function formatCurrency(value, culture) {
 
   formattedCurrency = value.toFixed(CURRENCY_PRECISION);
 
-  if (culture === null || culture === undefined) {
-    console.error('Culture is nullish.');
+  if (currencyCode === null || currencyCode === undefined) {
+    console.error('Currency Code is nullish.');
     return formattedCurrency;
   }
 
-  return `${formattedCurrency}${CURRENCY_CODES[culture] ?? ''}`;
+  return `${formattedCurrency}${CURRENCY_CODES[currencyCode] ?? ''}`;
+}
+
+function getCurrentDateTimeCultureFormatted(culture) {
+  const now = new Date();
+
+  const date = `${now.getDate()}`.padStart(2, 0);
+  const month = `${now.getMonth() + 1}`.padStart(2, 0);
+  const year = now.getFullYear();
+
+  const hours = `${now.getHours()}`.padStart(2, 0);
+  const minutes = `${now.getMinutes()}`.padStart(2, 0);
+
+  return `${date}-${month}-${year} ${hours}:${minutes}`;
+}
+
+function getDateTimeCultureFormatted(dateTimeISOString, culture) {
+  const now = new Date(dateTimeISOString);
+
+  const date = `${now.getDate()}`.padStart(2, 0);
+  const month = `${now.getMonth() + 1}`.padStart(2, 0);
+  const year = now.getFullYear();
+
+  const hours = `${now.getHours()}`.padStart(2, 0);
+  const minutes = `${now.getMinutes()}`.padStart(2, 0);
+
+  return `${date}-${month}-${year} ${hours}:${minutes}`;
+}
+
+function getCurrentDateTimeISOFormatted() {
+  return new Date().toISOString();
 }
 
 function isEven(num) {
@@ -804,10 +867,12 @@ function clearWelcomeUserText() {
 // Main Component
 function updateAccountBalanceData(component, userAccount) {
   const data = {
-    balanceDate: '28-09-2025',
+    balanceDate: getCurrentDateTimeCultureFormatted(userAccount.culture),
     balanceValue: formatCurrency(
-      getTotalBalance(userAccount.transactions),
-      userAccount.culture
+      getTotalBalance(
+        userAccount.transactions.flatMap((transaction) => transaction.amount)
+      ),
+      userAccount.culture.currencyCode
     ),
   };
 
@@ -828,9 +893,9 @@ function updateAccountBalance(component, userAccount) {
 
 function updateTransactionItemData(component, transaction, culture, styles) {
   const data = {
-    type: getTransactionType(transaction),
-    transactionDate: '28-09-2025',
-    transactionAmount: formatCurrency(transaction, culture),
+    type: getTransactionType(transaction.amount),
+    transactionDate: getDateTimeCultureFormatted(transaction.transactionDate),
+    transactionAmount: formatCurrency(transaction.amount, culture.currencyCode),
     styles,
   };
 
@@ -916,17 +981,23 @@ function renderTransactionsOperations(component, userAccount) {
 function updateTransactionSummaryData(component, userAccount) {
   const data = {
     inAmount: formatCurrency(
-      getDepositsBalance(userAccount.transactions),
-      userAccount.culture
+      getDepositsBalance(
+        userAccount.transactions.flatMap((transaction) => transaction.amount)
+      ),
+      userAccount.culture.currencyCode
     ),
     outAmount: formatCurrency(
-      getWithdrawalsBalance(userAccount.transactions),
-      userAccount.culture
+      getWithdrawalsBalance(
+        userAccount.transactions.flatMap((transaction) => transaction.amount)
+      ),
+      userAccount.culture.currencyCode
     ),
     interestEarned: formatCurrency(
-      getTotalBalance(userAccount.transactions) *
+      getTotalBalance(
+        userAccount.transactions.flatMap((transaction) => transaction.amount)
+      ) *
         (userAccount.interestRate / 100),
-      userAccount.culture
+      userAccount.culture.currencyCode
     ),
   };
 
@@ -1097,12 +1168,12 @@ function performSort() {
   if (SORTING_POSITION === SORTING_DIRECTION.ASC) {
     sortedTransactions = LOGGED_IN_USER.transactions
       .slice()
-      .sort((a, b) => b - a);
+      .sort((a, b) => b.amount - a.amount);
     SORTING_POSITION = SORTING_DIRECTION.DESC;
   } else if (SORTING_POSITION === SORTING_DIRECTION.DESC) {
     sortedTransactions = LOGGED_IN_USER.transactions
       .slice()
-      .sort((a, b) => a - b);
+      .sort((a, b) => a.amount - b.amount);
     SORTING_POSITION = SORTING_DIRECTION.ASC;
   } else {
     console.error('Sorting Position is invalid.');
@@ -1198,12 +1269,18 @@ function transferMoney(recipientUserName, transferAmount) {
 
   if (accountToTransfer) {
     const loggedInUserAccountBalance = getTotalBalance(
-      LOGGED_IN_USER.transactions
+      LOGGED_IN_USER.transactions.flatMap((transaction) => transaction.amount)
     );
 
     if (loggedInUserAccountBalance > transferAmount) {
-      LOGGED_IN_USER.transactions.push(-transferAmount);
-      accountToTransfer.transactions.push(transferAmount);
+      LOGGED_IN_USER.transactions.push({
+        amount: -transferAmount,
+        transactionDate: getCurrentDateTimeISOFormatted(),
+      });
+      accountToTransfer.transactions.push({
+        amount: transferAmount,
+        transactionDate: getCurrentDateTimeISOFormatted(),
+      });
 
       // Update UI
       updateMainComponent(LOGGED_IN_USER);
@@ -1219,12 +1296,15 @@ function transferMoney(recipientUserName, transferAmount) {
 }
 
 function loadAdd(loanAmount) {
-  const hasRequiredDeposit = LOGGED_IN_USER.transactions.some(
-    (transaction) => transaction > 0 && transaction > loanAmount * 0.1
-  );
+  const hasRequiredDeposit = LOGGED_IN_USER.transactions
+    .flatMap((transaction) => transaction.amount)
+    .some((transaction) => transaction > 0 && transaction > loanAmount * 0.1);
 
   if (hasRequiredDeposit) {
-    LOGGED_IN_USER.transactions.push(loanAmount);
+    LOGGED_IN_USER.transactions.push({
+      amount: loanAmount,
+      transactionDate: getCurrentDateTimeISOFormatted(),
+    });
 
     // Update UI
     updateMainComponent(LOGGED_IN_USER);
@@ -1257,7 +1337,8 @@ function loadEasterEgg() {
 }
 
 function initApp() {
-  performLogout();
+  // performLogout();
+  login(account1);
   loadEasterEgg();
 }
 
