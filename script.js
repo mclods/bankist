@@ -45,8 +45,11 @@ const ACCOUNTS = [account1, account2, account3, account4, account5];
 
 // Global Variables
 const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
+
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
+
+const CURRENCY_PRECISION = 2;
 
 const TRANSACTION_TYPE = {
   Deposit: 'deposit',
@@ -171,7 +174,7 @@ const mainComponent = {
           </div>
         </div>
         <div class="flex-row align-center justify-end">
-          <p class="balance-value">${formatField(this.data.balanceValue)}</p>
+          <p class="balance-value">${this.data.balanceValue}</p>
         </div>
       `;
     },
@@ -348,6 +351,7 @@ const mainComponent = {
             type: '',
             transactionDate: '',
             transactionAmount: '',
+            styles: '',
           },
           containerId: 'transaction-items-container',
           componentId: 'transaction-container',
@@ -383,7 +387,9 @@ const mainComponent = {
             return `
             <div
               id="transaction-container"
-              class="flex-row no-shrink align-center transaction-container"
+              class="flex-row no-shrink align-center transaction-container ${
+                this.data.styles ?? ''
+              }"
             >
               ${this.getChildHtml()}
             </div>
@@ -408,9 +414,7 @@ const mainComponent = {
               <div
                 class="flex-row full-width justify-end transaction-amount-container"
               >
-                <p class="transaction-amount">${formatField(
-                  this.data.transactionAmount
-                )}</p>
+                <p class="transaction-amount">${this.data.transactionAmount}</p>
               </div>
             `;
           },
@@ -468,9 +472,7 @@ const mainComponent = {
             <p class="transactions-summary-title">IN</p>
           </div>
           <div>
-            <p class="transaction-summary-amount plus-amount">${formatField(
-              this.data.inAmount
-            )}</p>
+            <p class="transaction-summary-amount plus-amount">${this.data.inAmount}</p>
           </div>
         </div>
         <div class="flex-row align-center transactions-summary-gap">
@@ -478,9 +480,7 @@ const mainComponent = {
             <p class="transactions-summary-title">OUT</p>
           </div>
           <div>
-            <p class="transaction-summary-amount minus-amount">${formatField(
-              this.data.outAmount
-            )}</p>
+            <p class="transaction-summary-amount minus-amount">${this.data.outAmount}</p>
           </div>
         </div>
         <div class="flex-row align-center transactions-summary-gap">
@@ -488,9 +488,7 @@ const mainComponent = {
             <p class="transactions-summary-title">INTEREST</p>
           </div>
           <div>
-            <p class="transaction-summary-amount plus-amount">${formatField(
-              this.data.interestRate
-            )}</p>
+            <p class="transaction-summary-amount plus-amount">${this.data.interestEarned}</p>
           </div>
         </div>
       `;
@@ -624,15 +622,25 @@ function formatField(field) {
 }
 
 function formatCurrency(value, culture) {
+  let formattedCurrency;
+
   if (value === null || value === undefined) {
     console.error('Currency value is nullish.');
     return '';
-  } else if (culture === null || culture === undefined) {
-    console.error('Culture is nullish.');
-    return value;
   }
 
-  return `${value}${CURRENCY_CODES[culture] ?? ''}`;
+  formattedCurrency = value.toFixed(CURRENCY_PRECISION);
+
+  if (culture === null || culture === undefined) {
+    console.error('Culture is nullish.');
+    return formattedCurrency;
+  }
+
+  return `${formattedCurrency}${CURRENCY_CODES[culture] ?? ''}`;
+}
+
+function isEven(num) {
+  return num % 2 === 0;
 }
 
 function getTransactionType(transactionAmount) {
@@ -818,22 +826,24 @@ function updateAccountBalance(component, userAccount) {
   updateComponent(componentToRender);
 }
 
-function updateTransactionItemData(component, transaction, culture) {
+function updateTransactionItemData(component, transaction, culture, styles) {
   const data = {
     type: getTransactionType(transaction),
     transactionDate: '28-09-2025',
     transactionAmount: formatCurrency(transaction, culture),
+    styles,
   };
 
   return updateComponentData(component, data);
 }
 
-function renderTransactionItem(component, transaction, culture) {
+function renderTransactionItem(component, transaction, culture, styles) {
   // Set Data
   const componentToRender = updateTransactionItemData(
     component,
     transaction,
-    culture
+    culture,
+    styles
   );
   renderComponent(componentToRender);
 }
@@ -841,11 +851,18 @@ function renderTransactionItem(component, transaction, culture) {
 function renderTransactionItems(component, transactions, culture) {
   clearComponent(component);
 
+  const evenRowStyles = 'transaction-container-color';
+
   transactions
     .slice()
     .reverse()
-    .forEach((transaction) => {
-      renderTransactionItem(component, transaction, culture);
+    .forEach((transaction, index) => {
+      renderTransactionItem(
+        component,
+        transaction,
+        culture,
+        isEven(index) ? evenRowStyles : ''
+      );
     });
 }
 
@@ -906,7 +923,7 @@ function updateTransactionSummaryData(component, userAccount) {
       getWithdrawalsBalance(userAccount.transactions),
       userAccount.culture
     ),
-    interestRate: formatCurrency(
+    interestEarned: formatCurrency(
       getTotalBalance(userAccount.transactions) *
         (userAccount.interestRate / 100),
       userAccount.culture
