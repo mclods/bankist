@@ -82,6 +82,8 @@ const ERROR_HIGHLIGHT_STYLE = 'error-highlight';
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
 
+const SESSION_TIME_SECONDS = 300;
+
 const CURRENCY_PRECISION = 2;
 
 const TRANSACTION_TYPE = {
@@ -121,9 +123,11 @@ let LOGGED_IN_USER;
 
 let SORTING_POSITION = SORTING_DIRECTION.DESC;
 
+let SESSION_TIMER;
+
 // Global DOM Elements
-const welcomeUserTitleEl = document.getElementById('welcome-user-title');
-const appLogo = document.querySelector('.logo-img');
+const WELCOME_USER_TITLE_EL = document.getElementById('welcome-user-title');
+const APP_LOGO_EL = document.querySelector('.logo-img');
 
 // Global Components
 const userControlsComponent = {
@@ -533,6 +537,22 @@ const mainComponent = {
   },
 };
 
+const sessionTimeoutComponent = {
+  data: {
+    timeoutTime: '',
+  },
+  containerId: 'session-container',
+  componentId: 'session-timeout-time',
+  getHtml() {
+    return `<p class="session-text">Session expires in <span id="session-timeout-time">${this.getChildHtml()}</span>.</p>`;
+  },
+  getChildHtml() {
+    return `${formatField(this.data.timeoutTime)}`;
+  },
+  getContainer,
+  getComponent,
+};
+
 // Helper Methods
 function getContainer() {
   return document.getElementById(this.containerId);
@@ -880,22 +900,22 @@ function getWithdrawalsBalance(transactions) {
 
 // Welcome Text Controls
 function showWelcomeUserText(userName) {
-  if (welcomeUserTitleEl) {
-    welcomeUserTitleEl.textContent = getWelcomeUserText(userName);
+  if (WELCOME_USER_TITLE_EL) {
+    WELCOME_USER_TITLE_EL.textContent = getWelcomeUserText(userName);
   } else {
     console.error(ERROR_MESSAGES.containerMissingError('Welcome User Title'));
   }
 }
 
 function clearWelcomeUserText() {
-  if (welcomeUserTitleEl) {
-    welcomeUserTitleEl.textContent = '';
+  if (WELCOME_USER_TITLE_EL) {
+    WELCOME_USER_TITLE_EL.textContent = '';
   } else {
     console.error(ERROR_MESSAGES.containerMissingError('Welcome User Title'));
   }
 }
 
-// Main Component
+// Main Component Controls
 function updateAccountBalanceData(component, userAccount) {
   const data = {
     balanceDate: getCurrentDateTimeCultureFormatted(userAccount.culture),
@@ -1094,12 +1114,13 @@ function clearMainComponent() {
   clearComponent(mainComponent);
 }
 
-function clearUserControls() {
-  clearComponent(userControlsComponent);
-}
-
 function clearUserAccountDetails() {
   clearMainComponent();
+}
+
+// Login/Logout Controls
+function clearUserControls() {
+  clearComponent(userControlsComponent);
 }
 
 function renderLoginControls() {
@@ -1115,6 +1136,45 @@ function renderLogoutControls() {
 function renderUserAccountDetails(userAccount) {
   clearUserAccountDetails();
   renderMainComponent(userAccount);
+}
+
+// Session Text Controls
+function updateSessionTimeoutData(component, timeoutTime) {
+  const data = {
+    timeoutTime,
+  };
+
+  return updateComponentData(component, data);
+}
+
+function renderSessionTimeoutComponent(timeoutTime) {
+  // Set Data
+  const componentToRender = updateSessionTimeoutData(
+    sessionTimeoutComponent,
+    timeoutTime
+  );
+  loadComponent(componentToRender);
+}
+
+function updateSessionTimeoutComponent(timeoutTime) {
+  // Set Data
+  const componentToRender = updateSessionTimeoutData(
+    sessionTimeoutComponent,
+    timeoutTime
+  );
+  updateComponent(componentToRender);
+}
+
+function clearSessionTimeoutComponent() {
+  clearComponent(sessionTimeoutComponent);
+}
+
+function updateSessionTimeout(timeoutSeconds) {
+  const minutes = new String(Math.trunc(timeoutSeconds / 60)).padStart(2, 0);
+  const seconds = new String(timeoutSeconds % 60).padStart(2, 0);
+
+  const timeoutTime = `${minutes}:${seconds}`;
+  updateSessionTimeoutComponent(timeoutTime);
 }
 
 // Event Handlers
@@ -1190,10 +1250,9 @@ function performLogin() {
 }
 
 function performLogout() {
-  LOGGED_IN_USER = undefined;
-  clearWelcomeUserText();
-  renderLoginControls();
-  clearUserAccountDetails();
+  cleanAppState();
+  clearSessionTimeout();
+  console.info('User logged out.');
 }
 
 function performSort() {
@@ -1221,6 +1280,7 @@ function performSort() {
 }
 
 function performMoneyTransfer() {
+  loadSessionTimeout();
   clearMoneyTransferError();
   const [recipient, amount] = getMoneyTransferFields();
 
@@ -1244,6 +1304,7 @@ function performMoneyTransfer() {
 }
 
 function performLoanAdd() {
+  loadSessionTimeout();
   clearLoanAddError();
   const [amount] = getLoadAddFields();
 
@@ -1294,6 +1355,9 @@ function login(userAccount) {
   showWelcomeUserText(userAccount.owner);
   renderLogoutControls();
   renderUserAccountDetails(userAccount);
+  renderSessionTimeoutComponent();
+  loadSessionTimeout();
+  console.info(`User: ${userAccount.owner} logged in.`);
 }
 
 function transferMoney(recipientUserName, transferAmount) {
@@ -1360,18 +1424,70 @@ function closeAccount() {
   performLogout();
 }
 
-function loadEasterEgg() {
-  appLogo.addEventListener('click', () => {
-    appLogo.classList.add(ROTATE_STYLE);
+function loadSessionTimeout() {
+  const SESSION_TIMEOUT_INTERVAL_UPDATE_TIME_MS = 1000;
 
-    setTimeout(() => {
-      appLogo.classList.remove(ROTATE_STYLE);
-    }, ROTATE_TIME_SECONDS * 1000);
-  });
+  let sessionTime = SESSION_TIME_SECONDS;
+  updateSessionTimeout(sessionTime);
+
+  if (SESSION_TIMER) {
+    clearSessionTimeout();
+  }
+
+  SESSION_TIMER = setInterval(() => {
+    // console.log('Interval Running...');
+
+    if (sessionTime <= 0) {
+      onSessionExpired();
+      return;
+    }
+
+    sessionTime--;
+
+    updateSessionTimeout(sessionTime);
+  }, SESSION_TIMEOUT_INTERVAL_UPDATE_TIME_MS);
+}
+
+function clearSessionTimeout() {
+  if (SESSION_TIMER) {
+    clearTimeout(SESSION_TIMER);
+    SESSION_TIMER = undefined;
+  } else {
+    console.error(
+      'Clearing session timeout failed. Session Timer does not exist.'
+    );
+  }
+}
+
+function onSessionExpired() {
+  performLogout();
+  console.info('User session expired.');
+}
+
+function loadEasterEgg() {
+  if (APP_LOGO_EL) {
+    APP_LOGO_EL.addEventListener('click', () => {
+      APP_LOGO_EL.classList.add(ROTATE_STYLE);
+
+      setTimeout(() => {
+        APP_LOGO_EL.classList.remove(ROTATE_STYLE);
+      }, ROTATE_TIME_SECONDS * 1000);
+    });
+  } else {
+    console.error(ERROR_MESSAGES.containerMissingError('App Logo'));
+  }
+}
+
+function cleanAppState() {
+  LOGGED_IN_USER = undefined;
+  clearWelcomeUserText();
+  renderLoginControls();
+  clearUserAccountDetails();
+  clearSessionTimeoutComponent();
 }
 
 function initApp() {
-  performLogout();
+  cleanAppState();
   loadEasterEgg();
 }
 
