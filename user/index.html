@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bankist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/assets/icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="font-poppins-regular">
+    <header class="flex-row align-center header-container">
+      <div class="flex-row align-center full-width user-title-container">
+        <p id="welcome-user-title" class="user-title"></p>
+      </div>
+      <div class="flex-row full-width justify-center">
+        <img src="/assets/logo.png" alt="Company Logo" class="logo-img" />
+      </div>
+      <div
+        id="user-controls-container"
+        class="flex-row full-width justify-end login-container"
+      ></div>
+    </header>
+    <main id="main-container" class="flex-col main-container"></main>
+    <footer class="flex-row content-padding">
+      <section id="footer-container" class="flex-col full-width justify-center align-end footer-content-gap">
+        <div>
+          <p class="copyright-text">
+            © 2025 developed by The Bankist Team. All rights reserved.
+          </p>
+        </div>
+        <div id="session-container">
+        </div>
+      </section>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
