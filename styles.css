@@ -1,6 +1,5 @@
 :root {
-  --body-transition-time: 1s;
-  --navigation-container-transition-time: 0.2s;
+  --page-transition-time: 1s;
 }
 
 * {
@@ -12,7 +11,7 @@
 body {
   color: #444;
   background-color: #f3f3f3;
-  transition: all var(--body-transition-time) ease-in-out;
+  transition: all var(--page-transition-time) ease-in-out;
 }
 
 .font-poppins-regular {
@@ -70,7 +69,7 @@ header {
   padding: 2rem;
   border: solid 2px #dddddd;
   border-radius: 2rem;
-  transition: all var(--navigation-container-transition-time) ease-in-out;
+  transition: all var(--page-transition-time) ease-in-out;
 }
 
 .navigation-header-container {
