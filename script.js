@@ -1,6 +1,6 @@
 'use strict';
 
-const NAVIGATION_LOAD_DELAY_TIME_MS = 2000;
+const NAVIGATION_LOAD_DELAY_TIME_MS = 1500;
 const HIDDEN_STYLE = 'hidden';
 
 // Global DOM Elements
