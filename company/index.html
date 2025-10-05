@@ -13,8 +13,175 @@
     <link rel="icon" type="image/png" href="../assets/icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    Company
+  <body class="flex-col font-poppins-regular">
+    <header class="flex-col header-container">
+      <nav class="flex-row justify-between align-center nav-container">
+        <div class="flex-row align-center">
+          <div class="logo-img-container">
+            <img src="../assets/logo.png" alt="Company Logo" class="logo-img" />
+          </div>
+          <div><p class="company-title">Bankist</p></div>
+        </div>
+        <div class="flex-row nav-btn-gap">
+          <div>
+            <button class="btn nav-btn font-poppins-regular">Features</button>
+          </div>
+          <div>
+            <button class="btn nav-btn font-poppins-regular">Operations</button>
+          </div>
+          <div>
+            <button class="btn nav-btn font-poppins-regular">
+              Testimonials
+            </button>
+          </div>
+          <div>
+            <button class="btn nav-btn font-poppins-regular green-btn">
+              Open Account
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="flex-row align-center header-title-img-container">
+        <div class="flex-col header-title-container">
+          <div class="header-main-title-container">
+            <p class="header-title">
+              When <span class="header-title-highlight">banking</span> meets
+              <span class="header-title-highlight">minimalist</span>
+            </p>
+          </div>
+          <div class="header-subtitle-container">
+            <p class="header-subtitle">
+              A simpler banking experience for a simpler life.
+            </p>
+          </div>
+          <div>
+            <button class="btn scroll-btn">
+              Learn More <span class="scroll-btn-arrow">&DownArrow;</span>
+            </button>
+          </div>
+        </div>
+        <div class="header-img-container">
+          <img
+            src="../assets/hero.png"
+            alt="Minimalist banking items"
+            class="header-img"
+          />
+        </div>
+      </div>
+    </header>
+
+    <section class="features flex-col align-center section-container">
+      <div class="flex-col section-header">
+        <div><p class="section-title">Features</p></div>
+        <div>
+          <p class="section-subtitle">
+            Everything you need in a modern bank and more.
+          </p>
+        </div>
+      </div>
+      <div class="features-container">
+        <div>
+          <img
+            src="../assets/digital-lazy.jpg"
+            alt="Bankist app running on a computer."
+            class="features-img lazy-img"
+          />
+        </div>
+        <div class="flex-col">
+          <div class="features_icon">
+            <svg>
+              <use xlink:href="../assets/icons.svg#icon-monitor"></use>
+            </svg>
+          </div>
+          <div class="flex-col justify-center">
+            <div class="features-header-container">
+              <p class="features-header">100% digital bank</p>
+            </div>
+            <div>
+              <p class="features-description">
+                Manage your money anytime, anywhere. From instant account
+                opening to seamless payments and real-time insights — experience
+                banking that lives entirely on your phone.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex-col">
+          <div class="features_icon">
+            <svg>
+              <use xlink:href="../assets/icons.svg#icon-trending-up"></use>
+            </svg>
+          </div>
+          <div class="flex-col justify-center">
+            <div class="features-header-container">
+              <p class="features-header">Watch your money grow</p>
+            </div>
+            <div>
+              <p class="features-description">
+                Watch your money grow faster with our high-interest savings
+                accounts. Earn up to 7% annual returns while keeping your funds
+                safe and instantly accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <img
+            src="../assets/grow-lazy.jpg"
+            alt="A money plant."
+            class="features-img lazy-img"
+          />
+        </div>
+        <div>
+          <img
+            src="../assets/card-lazy.jpg"
+            alt="Bankist Debit Card."
+            class="features-img lazy-img"
+          />
+        </div>
+        <div class="flex-col justify-center">
+          <div class="features_icon">
+            <svg>
+              <use xlink:href="../assets/icons.svg#icon-credit-card"></use>
+            </svg>
+          </div>
+          <div class="flex-col">
+            <div class="features-header-container">
+              <p class="features-header">Free debit card included</p>
+            </div>
+            <div>
+              <p class="features-description">
+                Free debit card included with every account — use it anywhere,
+                anytime. Shop online, withdraw cash, and make contactless
+                payments with zero hidden fees.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="operations flex-col align-center section-container">
+      <div class="flex-col section-header">
+        <div><p class="section-title">Operations</p></div>
+        <div>
+          <p class="section-subtitle">
+            Everything as simple as possible, but no simpler.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials flex-col align-center section-container">
+      <div class="flex-col section-header">
+        <div><p class="section-title">Not sure yet?</p></div>
+        <div>
+          <p class="section-subtitle">
+            Millions of Bankists are already making their lifes simpler.
+          </p>
+        </div>
+      </div>
+    </section>
     <script src="script.js"></script>
   </body>
 </html>

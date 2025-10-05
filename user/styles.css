@@ -48,7 +48,7 @@ body {
 }
 
 .full-width {
-  flex-basis: 100%;
+  flex: 1;
 }
 
 .no-shrink {
