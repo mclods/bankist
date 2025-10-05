@@ -6,7 +6,7 @@ bankist is a simple bank ui.
 
 ### Architecture
 
-![bankist architecture](diagrams/bankist-app-architecture.jpg)
+![bankist architecture](diagrams/bankist-user-app-architecture.jpg)
 
 ### Features
 

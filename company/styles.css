@@ -1,5 +1,276 @@
+:root {
+  --color-primary: #5ec576;
+  --color-secondary: #ffcb03;
+  --color-tertiary: #ff585f;
+  --color-primary-darker: #4bbb7d;
+  --color-secondary-darker: #ffbb00;
+  --color-tertiary-darker: #fd424b;
+  --color-primary-opacity: #5ec5763a;
+  --color-secondary-opacity: #ffcd0331;
+  --color-tertiary-opacity: #ff58602d;
+  --color-primary-darkest: #39895d;
+  --gradient-primary: linear-gradient(to top left, #39b385, #9be15d);
+  --gradient-secondary: linear-gradient(to top left, #ffb003, #ffcb03);
+  --section-separation-border-bottom: solid 1px #bcbcbc;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Flexbox Styles Start */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.full-width {
+  flex: 1;
+}
+/* Flexbox Styles End */
+
+body {
+  color: #444;
+  background-color: #f3f3f3;
+}
+
+.font-poppins-regular {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.header-container {
+  height: 100vh;
+  border-bottom: var(--section-separation-border-bottom);
+}
+
+.nav-container {
+  padding: 0.5rem 4rem 0 4rem;
+  height: 5.5rem;
+}
+
+.logo-img-container {
+  margin: 0.4rem;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.company-title {
+  font-size: 1.6rem;
+  font-weight: 450;
+  letter-spacing: 0.08rem;
+}
+
+.btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.nav-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+}
+
+.nav-btn-gap {
+  column-gap: 0.5rem;
+}
+
+.green-btn {
+  background: var(--color-primary);
+}
+
+.green-btn:hover {
+  background: var(--color-primary-darker);
+}
+
+.green-btn:active {
+  background: var(--color-primary-darkest);
+}
+
+.header-title-img-container {
+  padding: 2rem 12vw 0 12vw;
+}
+
+.header-title-container {
+  flex: 2;
+}
+
+.header-main-title-container {
+  margin-bottom: 1rem;
+}
+
+.header-title {
+  font-size: 3.4rem;
+  font-weight: 510;
+}
+
+.header-title-highlight {
+  position: relative;
+}
+
+.header-title-highlight::after {
+  display: block;
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  opacity: 0.7;
+  transform: scale(1.07, 1.05) skewX(-15deg);
+  background-image: var(--gradient-primary);
+}
+
+.header-subtitle-container {
+  margin-bottom: 1.5rem;
+}
+
+.header-subtitle {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.scroll-btn {
+  padding: 0.3rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.04rem;
+  border-bottom: solid 1px var(--color-primary);
+  color: var(--color-primary);
+}
+
+.scroll-btn-arrow {
+  display: inline-block;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.header-img-container {
+  margin: 1rem;
+  flex: 1;
+}
+
+.header-img {
+  width: 30vw;
+  height: 55vh;
+}
+
+.section-container {
+  padding: 8rem 12rem;
+  border-bottom: var(--section-separation-border-bottom);
+}
+
+.section-header {
+  width: 50vw;
+  row-gap: 1rem;
+  margin-bottom: 5rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 550;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.section-subtitle {
+  font-size: 2.3rem;
+  font-weight: 500;
+}
+
+.features-img {
+  width: 100%;
+  height: 100%;
+}
+
+.lazy-img {
+  filter: blur(20px);
+}
+
+.features-container {
+  display: grid;
+  grid-template-columns: repeat(2, 35vw);
+  gap: 2rem;
+}
+
+.features_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary-opacity);
+  height: 5.5rem;
+  width: 5.5rem;
+  border-radius: 50%;
+  margin-bottom: 2rem;
+}
+
+.features_icon svg {
+  height: 2.5rem;
+  width: 2.5rem;
+  fill: var(--color-primary);
+}
+
+.features-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.features-description {
+  font-weight: 300;
+}
+
+.features-header-container {
+  margin-bottom: 2rem;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
 }
