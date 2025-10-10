@@ -19,6 +19,7 @@
   --section-separation-border-bottom: solid 1px #bcbcbc;
 
   --text-color-primary: #444;
+  --text-color-secondary: #fff;
 
   --logo-rotate-time: 0.5s;
 }
@@ -50,6 +51,10 @@
 
 .align-end {
   align-items: flex-end;
+}
+
+.align-self-end {
+  align-self: flex-end;
 }
 
 .justify-start {
@@ -105,7 +110,7 @@ body {
 .btn {
   padding: 0.5rem 1rem;
   font-size: 1.12rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   background: none;
   border: none;
@@ -116,6 +121,7 @@ body {
 }
 
 .primary-btn {
+  color: var(--text-color-secondary);
   background: var(--color-primary);
 }
 
@@ -320,6 +326,90 @@ body {
 
 .features-header-container {
   margin-bottom: 2rem;
+}
+
+.modal-container {
+  width: 38vw;
+  height: 75vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 3rem;
+  border: none;
+  background-color: #f3f3f3;
+}
+
+.modal-container::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-close-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 100%;
+  border: none;
+  color: var(--text-color-primary);
+  background-color: #e7e7e7;
+}
+
+.modal-close-btn:hover {
+  background-color: #dddddd;
+}
+
+.modal-close-btn:active {
+  background-color: #d9d7d7;
+}
+
+.modal-header-container {
+  margin-bottom: 2.8rem;
+}
+
+.modal-title {
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: var(--text-color-primary);
+}
+
+.modal-field-container {
+  margin: 1rem 0;
+}
+
+.modal-input-label-container {
+  width: 11rem;
+}
+
+.modal-input-label {
+  font-size: 1.1rem;
+  color: var(--text-color-primary);
+  font-weight: 500;
+}
+
+.modal-input {
+  width: 15rem;
+  height: 2.5rem;
+  padding: 0 0.8rem;
+  font-size: 1.1rem;
+  border: solid 2px #dddddd;
+  border-radius: 0.2rem;
+  background: #fff;
+}
+
+.modal-input:focus {
+  outline: none;
+  border: solid 2px #c4c4c4;
+  background-color: #fafafa;
+}
+
+.modal-buttons-container {
+  margin-top: 1rem;
+}
+
+.modal-buttons {
+  padding: 0.5rem 2rem;
 }
 
 /* Animations */
