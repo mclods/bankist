@@ -1,5 +1,6 @@
 :root {
   --page-transition-time: 1s;
+  --logo-rotate-time: 0.5s;
 }
 
 * {
@@ -79,4 +80,9 @@ header {
 .navigation-header {
   font-size: 1.2rem;
   font-weight: 420;
+}
+
+.rotate {
+  transform: rotate(6turn);
+  transition: transform var(--logo-rotate-time) ease-in-out;
 }

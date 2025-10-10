@@ -10,11 +10,11 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
-    <link rel="icon" type="image/png" href="../assets/icon.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="flex-col font-poppins-regular">
-    <header class="flex-col header-container">
+    <header id="header-container" class="flex-col header-container">
       <nav class="flex-row justify-between align-center nav-container">
         <div class="flex-row align-center">
           <div class="logo-img-container">
@@ -22,22 +22,23 @@
           </div>
           <div><p class="company-title">Bankist</p></div>
         </div>
-        <div class="flex-row nav-btn-gap">
+        <div class="flex-row nav-links-gap">
           <div>
-            <button class="btn nav-btn font-poppins-regular">Features</button>
+            <a href="#" class="nav-link font-poppins-regular">Features</a>
           </div>
           <div>
-            <button class="btn nav-btn font-poppins-regular">Operations</button>
+            <a href="#" class="nav-link font-poppins-regular">Operations</a>
           </div>
           <div>
-            <button class="btn nav-btn font-poppins-regular">
-              Testimonials
-            </button>
+            <a href="#" class="nav-link font-poppins-regular"> Testimonials </a>
           </div>
           <div>
-            <button class="btn nav-btn font-poppins-regular green-btn">
+            <a
+              href="#"
+              class="nav-link font-poppins-regular round-btn primary-btn"
+            >
               Open Account
-            </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -55,8 +56,11 @@
             </p>
           </div>
           <div>
-            <button class="btn scroll-btn">
-              Learn More <span class="scroll-btn-arrow">&DownArrow;</span>
+            <button
+              id="learn-more-btn"
+              class="btn text-primary-btn scroll-primary-btn"
+            >
+              Learn More <span class="animated-arrow">&DownArrow;</span>
             </button>
           </div>
         </div>
@@ -70,7 +74,10 @@
       </div>
     </header>
 
-    <section class="features flex-col align-center section-container">
+    <section
+      id="section-1"
+      class="features flex-col align-center section-container"
+    >
       <div class="flex-col section-header">
         <div><p class="section-title">Features</p></div>
         <div>
@@ -182,6 +189,8 @@
         </div>
       </div>
     </section>
+
+    <section id="cookie-container" class="cookie-container"></section>
     <script src="script.js"></script>
   </body>
 </html>
