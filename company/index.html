@@ -33,12 +33,11 @@
             <a href="#" class="nav-link font-poppins-regular"> Testimonials </a>
           </div>
           <div>
-            <a
-              href="#"
-              class="nav-link font-poppins-regular round-btn primary-btn"
+            <button
+              class="btn round-btn primary-btn font-poppins-regular open-account-btn"
             >
               Open Account
-            </a>
+            </button>
           </div>
         </div>
       </nav>
@@ -189,6 +188,80 @@
         </div>
       </div>
     </section>
+
+    <dialog id="modal-container" class="modal-container">
+      <div class="flex-col">
+        <div class="flex-row modal-header-container">
+          <div>
+            <p class="modal-title font-poppins-regular">
+              Open your bank account in just
+              <span class="header-title-highlight">5 minutes</span>
+            </p>
+          </div>
+          <div>
+            <form method="dialog">
+              <button class="modal-close-btn">X</button>
+            </form>
+          </div>
+        </div>
+        <div class="flex-col">
+          <div class="flex-row align-center modal-field-container">
+            <div class="modal-input-label-container">
+              <label
+                class="modal-input-label"
+                for="create-account-first-name-input"
+                >First Name</label
+              >
+            </div>
+            <div>
+              <input
+                id="create-account-first-name-input"
+                type="text"
+                class="modal-input font-poppins-regular"
+              />
+            </div>
+          </div>
+          <div class="flex-row align-center modal-field-container">
+            <div class="modal-input-label-container">
+              <label
+                class="modal-input-label"
+                for="create-account-last-name-input"
+                >Last Name</label
+              >
+            </div>
+            <div>
+              <input
+                id="create-account-last-name-input"
+                type="text"
+                class="modal-input font-poppins-regular"
+              />
+            </div>
+          </div>
+          <div class="flex-row align-center modal-field-container">
+            <div class="modal-input-label-container">
+              <label class="modal-input-label" for="create-account-email-input"
+                >Email Address</label
+              >
+            </div>
+            <div>
+              <input
+                id="create-account-email-input"
+                type="email"
+                class="modal-input font-poppins-regular"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="align-self-end modal-buttons-container">
+          <button
+            id="modal-submit-btn"
+            class="btn modal-buttons round-btn primary-btn font-poppins-regular"
+          >
+            Create &#8594;
+          </button>
+        </div>
+      </div>
+    </dialog>
 
     <section id="cookie-container" class="cookie-container"></section>
     <script src="script.js"></script>

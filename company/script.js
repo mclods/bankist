@@ -4,6 +4,12 @@
 const SECTION_1_ID = 'section-1';
 const COOKIE_CONTAINER_ID = 'cookie-container';
 const LEARN_MORE_BTN_ID = 'learn-more-btn';
+const MODAL_ID = 'modal-container';
+const MODAL_SUBMIT_BTN_ID = 'modal-submit-btn';
+
+const APP_LOGO_CLASS = 'logo-img';
+const OPEN_ACCOUNT_BTN_CLASS = 'open-account-btn';
+
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
 
@@ -20,8 +26,18 @@ const ERROR_MESSAGE = {
 const COOKIE_CONTAINER_EL = document.getElementById(COOKIE_CONTAINER_ID);
 const SECTION_1_EL = document.getElementById(SECTION_1_ID);
 const LEARN_MORE_BTN_EL = document.getElementById(LEARN_MORE_BTN_ID);
+const MODAL_CONTAINER_EL = document.getElementById(MODAL_ID);
+const MODAL_SUBMIT_BTN = document.getElementById(MODAL_SUBMIT_BTN_ID);
 
-const APP_LOGO_EL = document.querySelector('.logo-img');
+const APP_LOGO_EL = document.querySelector(getQueryForClass(APP_LOGO_CLASS));
+const OPEN_ACCOUNT_BTN = document.querySelector(
+  getQueryForClass(OPEN_ACCOUNT_BTN_CLASS)
+);
+
+// Helper Methods
+function getQueryForClass(className) {
+  return `.${className}`;
+}
 
 function showCookieMessage() {
   const COOKIE_MESSAGE =
@@ -72,6 +88,44 @@ function addLearnMoreBtnScrollEvent() {
   }
 }
 
+function showCreateAccountModal() {
+  if (MODAL_CONTAINER_EL) {
+    MODAL_CONTAINER_EL.showModal();
+  } else {
+    console.error(ERROR_MESSAGE.getMissingElementWithIdError(MODAL_ID));
+  }
+}
+
+function closeCreateAccountModal() {
+  if (MODAL_CONTAINER_EL) {
+    MODAL_CONTAINER_EL.close();
+  } else {
+    console.error(ERROR_MESSAGE.getMissingElementWithIdError(MODAL_ID));
+  }
+}
+
+function setupCreateAccountModal() {
+  if (MODAL_SUBMIT_BTN) {
+    MODAL_SUBMIT_BTN.addEventListener('click', closeCreateAccountModal);
+  } else {
+    console.error(
+      ERROR_MESSAGE.getMissingElementWithIdError(MODAL_SUBMIT_BTN_ID)
+    );
+  }
+}
+
+function addCreateAccountClickEvent() {
+  setupCreateAccountModal();
+
+  if (OPEN_ACCOUNT_BTN) {
+    OPEN_ACCOUNT_BTN.addEventListener('click', showCreateAccountModal);
+  } else {
+    console.error(
+      ERROR_MESSAGE.getMissingElementWithClassError(OPEN_ACCOUNT_BTN_CLASS)
+    );
+  }
+}
+
 function loadEasterEgg() {
   if (APP_LOGO_EL) {
     APP_LOGO_EL.addEventListener('click', () => {
@@ -88,4 +142,5 @@ function loadEasterEgg() {
 
 loadEasterEgg();
 showCookieMessage();
+addCreateAccountClickEvent();
 addLearnMoreBtnScrollEvent();
