@@ -98,6 +98,23 @@ function showCreateAccountModal() {
 
 function closeCreateAccountModal() {
   if (MODAL_CONTAINER_EL) {
+    // Clean modal fields before closing
+    const MODAL_FIELD_IDS = [
+      'create-account-first-name-input',
+      'create-account-last-name-input',
+      'create-account-email-input',
+    ];
+
+    MODAL_FIELD_IDS.forEach((modalFieldId) => {
+      const field = document.getElementById(modalFieldId);
+
+      if (field) {
+        field.value = '';
+      } else {
+        console.error(ERROR_MESSAGE.getMissingElementWithIdError(modalFieldId));
+      }
+    });
+
     MODAL_CONTAINER_EL.close();
   } else {
     console.error(ERROR_MESSAGE.getMissingElementWithIdError(MODAL_ID));
