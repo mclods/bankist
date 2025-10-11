@@ -1,7 +1,7 @@
 'use strict';
 
 // Global Variables
-const NAVIGATION_LOAD_DELAY_TIME_MS = 1500;
+const NAVIGATION_LOAD_DELAY_TIME_MS = 1000;
 const HIDDEN_STYLE = 'hidden';
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;

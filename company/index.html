@@ -22,15 +22,21 @@
           </div>
           <div><p class="company-title">Bankist</p></div>
         </div>
-        <div class="flex-row nav-links-gap">
+        <div id="nav-links" class="flex-row nav-links-gap">
           <div>
-            <a href="#" class="nav-link font-poppins-regular">Features</a>
+            <a href="#section-1" class="nav-link font-poppins-regular"
+              >Features</a
+            >
           </div>
           <div>
-            <a href="#" class="nav-link font-poppins-regular">Operations</a>
+            <a href="#section-2" class="nav-link font-poppins-regular"
+              >Operations</a
+            >
           </div>
           <div>
-            <a href="#" class="nav-link font-poppins-regular"> Testimonials </a>
+            <a href="#section-3" class="nav-link font-poppins-regular">
+              Testimonials
+            </a>
           </div>
           <div>
             <button
@@ -167,7 +173,10 @@
       </div>
     </section>
 
-    <section class="operations flex-col align-center section-container">
+    <section
+      id="section-2"
+      class="operations flex-col align-center section-container"
+    >
       <div class="flex-col section-header">
         <div><p class="section-title">Operations</p></div>
         <div>
@@ -176,9 +185,134 @@
           </p>
         </div>
       </div>
+      <div class="flex-col operations-tabbed-container">
+        <div class="flex-row justify-center operations-tabs">
+          <div>
+            <button
+              class="btn round-btn secondary-btn tab-btn font-poppins-regular operations-tab-btn operations-tab-btn-active"
+              data-tab="1"
+            >
+              <span class="operations-tab-btn-number">01</span>Instant Transfers
+            </button>
+          </div>
+          <div>
+            <button
+              class="btn round-btn primary-btn tab-btn font-poppins-regular operations-tab-btn"
+              data-tab="2"
+            >
+              <span class="operations-tab-btn-number">02</span>Instant Loans
+            </button>
+          </div>
+          <div>
+            <button
+              class="btn round-btn tertiary-btn tab-btn font-poppins-regular operations-tab-btn"
+              data-tab="3"
+            >
+              <span class="operations-tab-btn-number">03</span>Instant Closing
+            </button>
+          </div>
+        </div>
+        <div class="flex-row operations-tabs-content-container">
+          <div
+            class="flex-row operations-tab-content operations-tab-content-gap operations-tab-1 operations-tab-content-active"
+          >
+            <div>
+              <div
+                class="flex-row justify-center align-center operations-tab-icon operations-tab-icon-1"
+              >
+                <svg>
+                  <use xlink:href="../assets/icons.svg#icon-upload"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-col operations-tab-description-container">
+              <div>
+                <p class="operations-tab-content-title">
+                  Move your money in seconds — anytime, anywhere.
+                </p>
+              </div>
+              <div>
+                <p class="operations-tab-content-description">
+                  With our instant transfer feature, you can send funds to any
+                  bank account instantly without waiting for business hours or
+                  processing delays. Whether it’s paying a friend, splitting a
+                  bill, or transferring between your own accounts, your money
+                  arrives the moment you hit “Send.” Secure, seamless, and
+                  lightning-fast.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex-row operations-tab-content operations-tab-content-gap operations-tab-2"
+          >
+            <div>
+              <div
+                class="flex-row justify-center align-center operations-tab-icon operations-tab-icon-2"
+              >
+                <svg>
+                  <use xlink:href="../assets/icons.svg#icon-home"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-col operations-tab-description-container">
+              <div>
+                <p class="operations-tab-content-title">
+                  Get the money you need when you need it most.
+                </p>
+              </div>
+              <div>
+                <p class="operations-tab-content-description">
+                  Our Instant Loans feature lets you apply, get approved, and
+                  receive funds within minutes — no paperwork, no waiting.
+                  Whether it’s for an emergency, a dream purchase, or a quick
+                  cash boost, enjoy flexible repayment options and transparent
+                  interest rates. Fast, easy, and completely digital — financial
+                  support at your fingertips.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex-row operations-tab-content operations-tab-content-gap operations-tab-3"
+          >
+            <div>
+              <div
+                class="flex-row justify-center align-center operations-tab-icon operations-tab-icon-3"
+              >
+                <svg>
+                  <use xlink:href="../assets/icons.svg#icon-user-x"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-col operations-tab-description-container">
+              <div>
+                <p class="operations-tab-content-title">
+                  Take full control of your finances.
+                </p>
+              </div>
+              <div>
+                <p class="operations-tab-content-description">
+                  With the power to close your account instantly — no branch
+                  visits, no lengthy procedures. With just a few taps, you can
+                  securely close your account, withdraw remaining funds, and
+                  receive a digital confirmation right away. Simple,
+                  transparent, and hassle-free — because managing your money
+                  should always be on your terms.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section class="testimonials flex-col align-center section-container">
+    <section
+      id="section-3"
+      class="testimonials flex-col align-center section-container"
+    >
       <div class="flex-col section-header">
         <div><p class="section-title">Not sure yet?</p></div>
         <div>
