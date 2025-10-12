@@ -22,6 +22,8 @@ const NAV_CONTAINER_CLASS = 'nav-container';
 const NAV_ITEM_CLASS = 'nav-item';
 const FADED_CLASS = 'faded';
 const VISIBLE_CLASS = 'visible';
+const STICKY_CLASS = 'sticky-container';
+const HEADER_CONTAINER_CLASS = 'header-container';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -55,6 +57,9 @@ const OPERATIONS_TABS_CONTENT_CONTAINER_EL = document.querySelector(
 );
 const NAV_CONTAINER_EL = document.querySelector(
   getQueryForClass(NAV_CONTAINER_CLASS)
+);
+const HEADER_CONTAINER_EL = document.querySelector(
+  getQueryForClass(HEADER_CONTAINER_CLASS)
 );
 
 // Helper Methods
@@ -190,7 +195,7 @@ function addFadeUnFadeStyle(element, fade) {
     element.classList.remove(fade ? VISIBLE_CLASS : FADED_CLASS);
     element.classList.add(fade ? FADED_CLASS : VISIBLE_CLASS);
   } else {
-    console.error('Trying to add blur/unblur style to invalid element');
+    console.error('Trying to add blur/unblur style to invalid element.');
   }
 }
 
@@ -235,6 +240,49 @@ function addNavLinksFadeOnHoverEffect() {
     console.error(
       ERROR_MESSAGE.getMissingElementWithClassError(NAV_CONTAINER_CLASS)
     );
+  }
+}
+
+function addRemoveStickyStyle(element, makeSticky) {
+  if (element) {
+    makeSticky
+      ? element.classList.add(STICKY_CLASS)
+      : element.classList.remove(STICKY_CLASS);
+  } else {
+    console.error('Trying to add/remove sticky style to invalid element.');
+  }
+}
+
+function addStickyNavbarOnScrollEffect() {
+  if (NAV_CONTAINER_EL && HEADER_CONTAINER_EL) {
+    const NAV_CONTAINER_EL_HEIGHT =
+      NAV_CONTAINER_EL.getBoundingClientRect().height;
+
+    const observerCallback = (entries) => {
+      const entry = entries[0];
+
+      if (entry) {
+        if (entry.isIntersecting) {
+          addRemoveStickyStyle(NAV_CONTAINER_EL, false);
+        } else {
+          addRemoveStickyStyle(NAV_CONTAINER_EL, true);
+        }
+      }
+    };
+
+    const observerOptions = {
+      root: null,
+      threshold: 0,
+      rootMargin: `-${NAV_CONTAINER_EL_HEIGHT}px`,
+    };
+
+    const observer = new IntersectionObserver(
+      observerCallback,
+      observerOptions
+    );
+    observer.observe(HEADER_CONTAINER_EL);
+  } else {
+    console.error('Cannot add sticky navbar effect');
   }
 }
 
@@ -334,5 +382,6 @@ showCookieMessage();
 addCreateAccountClickEvent();
 addPageNavigationScrollEvents();
 addNavLinksFadeOnHoverEffect();
+addStickyNavbarOnScrollEffect();
 addLearnMoreBtnScrollEvent();
 loadOperationsTabs();
