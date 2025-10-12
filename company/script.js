@@ -8,7 +8,8 @@ const MODAL_ID = 'modal-container';
 const MODAL_SUBMIT_BTN_ID = 'modal-submit-btn';
 const NAV_LINKS_CONTAINER_ID = 'nav-links';
 
-const APP_LOGO_CLASS = 'logo-img';
+const APP_LOGO_CONTAINER_CLASS = 'app-logo';
+const LOGO_IMG_CLASS = 'logo-img';
 const OPEN_ACCOUNT_BTN_CLASS = 'open-account-btn';
 const OPERATIONS_TABS_CONTAINER_CLASS = 'operations-tabs';
 const OPERATIONS_TAB_BTN_CLASS = 'operations-tab-btn';
@@ -17,6 +18,10 @@ const OPERATIONS_TABS_CONTENT_CONTAINER_CLASS =
   'operations-tabs-content-container';
 const OPERATIONS_TAB_CONTENT_CLASS = 'operations-tab-content';
 const OPERATIONS_TAB_CONTENT_ACTIVE_CLASS = 'operations-tab-content-active';
+const NAV_CONTAINER_CLASS = 'nav-container';
+const NAV_ITEM_CLASS = 'nav-item';
+const FADED_CLASS = 'faded';
+const VISIBLE_CLASS = 'visible';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -38,15 +43,18 @@ const MODAL_CONTAINER_EL = document.getElementById(MODAL_ID);
 const MODAL_SUBMIT_BTN = document.getElementById(MODAL_SUBMIT_BTN_ID);
 const NAV_LINKS_CONTAINER_EL = document.getElementById(NAV_LINKS_CONTAINER_ID);
 
-const APP_LOGO_EL = document.querySelector(getQueryForClass(APP_LOGO_CLASS));
+const LOGO_IMG_EL = document.querySelector(getQueryForClass(LOGO_IMG_CLASS));
 const OPEN_ACCOUNT_BTN = document.querySelector(
   getQueryForClass(OPEN_ACCOUNT_BTN_CLASS)
 );
-const OPERATIONS_TABS_CONTAINER = document.querySelector(
+const OPERATIONS_TABS_CONTAINER_EL = document.querySelector(
   getQueryForClass(OPERATIONS_TABS_CONTAINER_CLASS)
 );
-const OPERATIONS_TABS_CONTENT_CONTAINER = document.querySelector(
+const OPERATIONS_TABS_CONTENT_CONTAINER_EL = document.querySelector(
   getQueryForClass(OPERATIONS_TABS_CONTENT_CONTAINER_CLASS)
+);
+const NAV_CONTAINER_EL = document.querySelector(
+  getQueryForClass(NAV_CONTAINER_CLASS)
 );
 
 // Helper Methods
@@ -145,25 +153,11 @@ function addCreateAccountClickEvent() {
 }
 
 // Page Scrolling
-function addLearnMoreBtnScrollEvent() {
-  if (LEARN_MORE_BTN_EL) {
-    LEARN_MORE_BTN_EL.addEventListener('click', () => {
-      if (SECTION_1_EL) {
-        SECTION_1_EL.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        console.error(ERROR_MESSAGE.getMissingElementWithIdError(SECTION_1_ID));
-      }
-    });
-  } else {
-    console.error(
-      ERROR_MESSAGE.getMissingElementWithIdError(LEARN_MORE_BTN_ID)
-    );
-  }
-}
-
 function addPageNavigations() {
   if (NAV_LINKS_CONTAINER_EL) {
     NAV_LINKS_CONTAINER_EL.addEventListener('click', (e) => {
+      e.preventDefault();
+
       const targetEl = e.target;
 
       if (targetEl && targetEl.classList.contains('nav-link')) {
@@ -191,9 +185,77 @@ function addPageNavigations() {
   }
 }
 
+function addBlurToNavbarItemsNotInFocus(event, shouldBlur) {
+  const targetEl = event.target;
+
+  if (targetEl && targetEl.classList.contains(NAV_ITEM_CLASS)) {
+    const navItemInFocus = targetEl;
+
+    // Fade other nav bar items including logo
+    const appLogoEl = NAV_CONTAINER_EL.querySelector(
+      getQueryForClass(APP_LOGO_CONTAINER_CLASS)
+    );
+    if (appLogoEl) {
+      appLogoEl.classList.remove(shouldBlur ? VISIBLE_CLASS : FADED_CLASS);
+      appLogoEl.classList.add(shouldBlur ? FADED_CLASS : VISIBLE_CLASS);
+    } else {
+      console.error(
+        ERROR_MESSAGE.getMissingElementWithClassError(APP_LOGO_CONTAINER_CLASS)
+      );
+    }
+
+    if (NAV_CONTAINER_EL) {
+      NAV_CONTAINER_EL.querySelectorAll(
+        getQueryForClass(NAV_ITEM_CLASS)
+      ).forEach((navItem) => {
+        if (navItem !== navItemInFocus) {
+          navItem.classList.remove(shouldBlur ? VISIBLE_CLASS : FADED_CLASS);
+          navItem.classList.add(shouldBlur ? FADED_CLASS : VISIBLE_CLASS);
+        }
+      });
+    } else {
+      console.error(
+        ERROR_MESSAGE.getMissingElementWithClassError(NAV_CONTAINER_CLASS)
+      );
+    }
+  }
+}
+
+function addNavLinksFadeHoverEffect() {
+  if (NAV_CONTAINER_EL) {
+    NAV_CONTAINER_EL.addEventListener('mouseover', (e) =>
+      addBlurToNavbarItemsNotInFocus(e, true)
+    );
+
+    NAV_CONTAINER_EL.addEventListener('mouseout', (e) =>
+      addBlurToNavbarItemsNotInFocus(e, false)
+    );
+  } else {
+    console.error(
+      ERROR_MESSAGE.getMissingElementWithClassError(NAV_CONTAINER_CLASS)
+    );
+  }
+}
+
+function addLearnMoreBtnScrollEvent() {
+  if (LEARN_MORE_BTN_EL) {
+    LEARN_MORE_BTN_EL.addEventListener('click', () => {
+      if (SECTION_1_EL) {
+        SECTION_1_EL.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        console.error(ERROR_MESSAGE.getMissingElementWithIdError(SECTION_1_ID));
+      }
+    });
+  } else {
+    console.error(
+      ERROR_MESSAGE.getMissingElementWithIdError(LEARN_MORE_BTN_ID)
+    );
+  }
+}
+
 function loadOperationsTabs() {
-  if (OPERATIONS_TABS_CONTAINER) {
-    OPERATIONS_TABS_CONTAINER.addEventListener('click', (e) => {
+  if (OPERATIONS_TABS_CONTAINER_EL) {
+    OPERATIONS_TABS_CONTAINER_EL.addEventListener('click', (e) => {
       const targetEl = e.target;
 
       if (targetEl) {
@@ -206,19 +268,19 @@ function loadOperationsTabs() {
 
           if (selectedTabNumber) {
             const selectedTabContentEl =
-              OPERATIONS_TABS_CONTENT_CONTAINER.querySelector(
+              OPERATIONS_TABS_CONTENT_CONTAINER_EL.querySelector(
                 getQueryForClass(`operations-tab-${selectedTabNumber}`)
               );
 
             if (selectedTabContentEl) {
               // Clear selected content
-              OPERATIONS_TABS_CONTAINER.querySelectorAll(
+              OPERATIONS_TABS_CONTAINER_EL.querySelectorAll(
                 getQueryForClass(OPERATIONS_TAB_BTN_CLASS)
               ).forEach((tabBtn) => {
                 tabBtn.classList.remove(OPERATIONS_TAB_BTN_ACTIVE_CLASS);
               });
 
-              OPERATIONS_TABS_CONTENT_CONTAINER.querySelectorAll(
+              OPERATIONS_TABS_CONTENT_CONTAINER_EL.querySelectorAll(
                 getQueryForClass(OPERATIONS_TAB_CONTENT_CLASS)
               ).forEach((tabContent) => {
                 tabContent.classList.remove(
@@ -251,21 +313,25 @@ function loadOperationsTabs() {
 }
 
 function loadEasterEgg() {
-  if (APP_LOGO_EL) {
-    APP_LOGO_EL.addEventListener('click', () => {
-      APP_LOGO_EL.classList.add(ROTATE_STYLE);
+  if (LOGO_IMG_EL) {
+    LOGO_IMG_EL.addEventListener('click', () => {
+      LOGO_IMG_EL.classList.add(ROTATE_STYLE);
 
       setTimeout(() => {
-        APP_LOGO_EL.classList.remove(ROTATE_STYLE);
+        LOGO_IMG_EL.classList.remove(ROTATE_STYLE);
       }, ROTATE_TIME_SECONDS * 1000);
     });
   } else {
-    console.error(ERROR_MESSAGES.getMissingElementWithClassError('logo-img'));
+    console.error(
+      ERROR_MESSAGES.getMissingElementWithClassError(LOGO_IMG_CLASS)
+    );
   }
 }
 
 loadEasterEgg();
 showCookieMessage();
 addCreateAccountClickEvent();
+addPageNavigations();
+addNavLinksFadeHoverEffect();
 addLearnMoreBtnScrollEvent();
 loadOperationsTabs();
