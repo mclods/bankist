@@ -17,3 +17,5 @@ bankist is a simple bank ui.
 5. Supports account closure.
 
 ## Bankist Company App
+
+... To be added.

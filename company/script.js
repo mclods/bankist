@@ -26,6 +26,8 @@ const STICKY_CLASS = 'sticky-container';
 const HEADER_CONTAINER_CLASS = 'header-container';
 const SECTION_CONTAINER_CLASS = 'section-container';
 const SECTION_HIDDEN_CLASS = 'section-hidden';
+const FEATURES_IMG_CLASS = 'features-img';
+const LAZY_IMG_CLASS = 'lazy-img';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -261,15 +263,15 @@ function addStickyNavbarOnScrollEffect() {
       NAV_CONTAINER_EL.getBoundingClientRect().height;
 
     const observerCallback = (entries) => {
-      const entry = entries[0];
-
-      if (entry) {
-        if (entry.isIntersecting) {
-          addRemoveStickyStyle(NAV_CONTAINER_EL, false);
-        } else {
-          addRemoveStickyStyle(NAV_CONTAINER_EL, true);
+      entries.forEach((entry) => {
+        if (entry) {
+          if (entry.isIntersecting) {
+            addRemoveStickyStyle(NAV_CONTAINER_EL, false);
+          } else {
+            addRemoveStickyStyle(NAV_CONTAINER_EL, true);
+          }
         }
-      }
+      });
     };
 
     const observerOptions = {
@@ -337,6 +339,38 @@ function addRevealSectionsEffect() {
         sectionEl.classList.add(SECTION_HIDDEN_CLASS);
       } else {
         console.error('Unable to add observer to section.');
+      }
+    });
+}
+
+function lazyLoadFeaturesImages() {
+  const observerCallback = (entries) => {
+    entries.forEach((entry) => {
+      if (entry && entry.isIntersecting) {
+        entry.target.src = entry.target.dataset.src;
+        entry.target.addEventListener('load', () => {
+          entry.target.classList.remove(LAZY_IMG_CLASS);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  const observerOptions = {
+    root: null,
+    threshold: 0,
+    rootMargin: '200px',
+  };
+
+  const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+  document
+    .querySelectorAll(getQueryForClass(FEATURES_IMG_CLASS))
+    .forEach((featuresImg) => {
+      if (featuresImg) {
+        observer.observe(featuresImg);
+      } else {
+        console.error('Unable to add observer to features image.');
       }
     });
 }
@@ -424,4 +458,5 @@ addNavLinksFadeOnHoverEffect();
 addStickyNavbarOnScrollEffect();
 addLearnMoreBtnScrollEvent();
 addRevealSectionsEffect();
+lazyLoadFeaturesImages();
 loadOperationsTabs();
