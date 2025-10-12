@@ -200,6 +200,14 @@ body {
 .hidden {
   opacity: 0;
 }
+
+.faded {
+  opacity: 0.2;
+}
+
+.visible {
+  opacity: 1;
+}
 /* Visibility End */
 
 .nav-links-gap {
