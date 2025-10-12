@@ -34,6 +34,7 @@
   --text-color-black: #000;
 
   --logo-rotate-time: 0.5s;
+  --standard-app-transition-time: 0.3s;
 }
 
 * {
@@ -114,7 +115,7 @@ body {
   font-size: 1.12rem;
   color: var(--text-color-primary);
   text-decoration: none;
-  transition: all 0.3s;
+  transition: all var(--standard-app-transition-time);
 }
 /* Links End */
 
@@ -332,6 +333,12 @@ body {
 .section-container {
   padding: 8rem 12rem;
   border-bottom: var(--section-separation-border-bottom);
+  transition: transform var(--standard-app-transition-time) ease-in-out;
+}
+
+.section-hidden {
+  opacity: 0;
+  transform: translateY(8rem);
 }
 
 .section-header {
@@ -492,7 +499,7 @@ body {
 
 .operations-tab-btn {
   transform: translateY(-50%);
-  transition: transform 0.3s ease-in-out;
+  transition: transform var(--standard-app-transition-time) ease-in-out;
 }
 
 .operations-tab-btn-active {
