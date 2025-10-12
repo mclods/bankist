@@ -1,27 +1,36 @@
 :root {
   --color-primary: #5ec576;
-  --color-secondary: #ffcb03;
-  --color-tertiary: #ff585f;
-
   --color-primary-darker: #4bbb7d;
-  --color-secondary-darker: #ffbb00;
-  --color-tertiary-darker: #fd424b;
-
+  --color-primary-darkest: #39895d;
   --color-primary-opacity: #5ec5763a;
+
+  --color-secondary: #ffcb03;
+  --color-secondary-darker: #ffbb00;
+  --color-secondary-darkest: #ecad00;
   --color-secondary-opacity: #ffcd0331;
+
+  --color-tertiary: #ff585f;
+  --color-tertiary-darker: #fd424b;
+  --color-tertiary-darkest: #e73e47;
   --color-tertiary-opacity: #ff58602d;
 
-  --color-primary-darkest: #39895d;
-  --color-secondary-darkest: #ecad00;
-  --color-tertiary-darkest: #e73e47;
+  --color-dark-white: #e7e7e7;
+  --color-dark-white-darker: #dddddd;
+  --color-dark-white-darkest: #c4c4c4;
 
   --gradient-primary: linear-gradient(to top left, #39b385, #9be15d);
   --gradient-secondary: linear-gradient(to top left, #ffb003, #ffcb03);
 
+  --background-primary: #f3f3f3;
+  --background-secondary: #bbb;
+
+  --background-white: #fff;
+  --background-white-dark: #fafafa;
+
   --section-separation-border-bottom: solid 1px #bcbcbc;
 
   --text-color-primary: #444;
-  --text-color-secondary: #fff;
+  --text-color-secondary: #f3f3f3;
   --text-color-black: #000;
 
   --logo-rotate-time: 0.5s;
@@ -83,7 +92,7 @@
 
 body {
   color: var(--text-color-primary);
-  background-color: #f3f3f3;
+  background-color: var(--background-primary);
 }
 
 .font-poppins-regular {
@@ -223,7 +232,7 @@ body {
 .cookie-message {
   padding: 0.4rem;
   column-gap: 2rem;
-  background: #bbb;
+  background: var(--background-secondary);
   z-index: 1;
 }
 
@@ -233,8 +242,15 @@ body {
 }
 
 .nav-container {
+  width: 100%;
   padding: 0.5rem 4rem 0 4rem;
   height: 5.5rem;
+}
+
+.sticky-nav-container {
+  left: 0;
+  top: 0;
+  position: fixed;
 }
 
 .logo-img-container {
@@ -388,7 +404,7 @@ body {
   transform: translate(-50%, -50%);
   padding: 3rem;
   border: none;
-  background-color: #f3f3f3;
+  background-color: var(--background-primary);
 }
 
 .modal-container::backdrop {
@@ -404,15 +420,15 @@ body {
   border-radius: 100%;
   border: none;
   color: var(--text-color-primary);
-  background-color: #e7e7e7;
+  background-color: var(--color-dark-white);
 }
 
 .modal-close-btn:hover {
-  background-color: #dddddd;
+  background-color: var(--color-dark-white-darker);
 }
 
 .modal-close-btn:active {
-  background-color: #d9d7d7;
+  background-color: var(--color-dark-white-darkest);
 }
 
 .modal-header-container {
@@ -444,15 +460,15 @@ body {
   height: 2.5rem;
   padding: 0 0.8rem;
   font-size: 1.1rem;
-  border: solid 2px #dddddd;
+  border: solid 2px var(--color-dark-white-darker);
   border-radius: 0.2rem;
-  background: #fff;
+  background: var(--background-white);
 }
 
 .modal-input:focus {
   outline: none;
-  border: solid 2px #c4c4c4;
-  background-color: #fafafa;
+  border: solid 2px var(--color-dark-white-darkest);
+  background-color: var(--background-white-dark);
 }
 
 .modal-buttons-container {
@@ -468,7 +484,7 @@ body {
 }
 
 .operations-tabs {
-  background: #fff;
+  background: var(--background-white);
   column-gap: 3rem;
 }
 
@@ -489,7 +505,7 @@ body {
 .operations-tabs-content-container {
   height: 45vh;
   padding: 3rem 4rem;
-  background: #fff;
+  background: var(--background-white);
 }
 
 .operations-tab-content {

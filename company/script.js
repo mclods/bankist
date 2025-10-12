@@ -153,7 +153,7 @@ function addCreateAccountClickEvent() {
 }
 
 // Page Scrolling
-function addPageNavigations() {
+function addPageNavigationScrollEvents() {
   if (NAV_LINKS_CONTAINER_EL) {
     NAV_LINKS_CONTAINER_EL.addEventListener('click', (e) => {
       e.preventDefault();
@@ -185,7 +185,16 @@ function addPageNavigations() {
   }
 }
 
-function addBlurToNavbarItemsNotInFocus(event, shouldBlur) {
+function addFadeUnFadeStyle(element, fade) {
+  if (element) {
+    element.classList.remove(fade ? VISIBLE_CLASS : FADED_CLASS);
+    element.classList.add(fade ? FADED_CLASS : VISIBLE_CLASS);
+  } else {
+    console.error('Trying to add blur/unblur style to invalid element');
+  }
+}
+
+function addFadeUnFadeToNavbarItemsNotInFocus(event, fade) {
   const targetEl = event.target;
 
   if (targetEl && targetEl.classList.contains(NAV_ITEM_CLASS)) {
@@ -195,22 +204,14 @@ function addBlurToNavbarItemsNotInFocus(event, shouldBlur) {
     const appLogoEl = NAV_CONTAINER_EL.querySelector(
       getQueryForClass(APP_LOGO_CONTAINER_CLASS)
     );
-    if (appLogoEl) {
-      appLogoEl.classList.remove(shouldBlur ? VISIBLE_CLASS : FADED_CLASS);
-      appLogoEl.classList.add(shouldBlur ? FADED_CLASS : VISIBLE_CLASS);
-    } else {
-      console.error(
-        ERROR_MESSAGE.getMissingElementWithClassError(APP_LOGO_CONTAINER_CLASS)
-      );
-    }
+    addFadeUnFadeStyle(appLogoEl, fade);
 
     if (NAV_CONTAINER_EL) {
       NAV_CONTAINER_EL.querySelectorAll(
         getQueryForClass(NAV_ITEM_CLASS)
       ).forEach((navItem) => {
         if (navItem !== navItemInFocus) {
-          navItem.classList.remove(shouldBlur ? VISIBLE_CLASS : FADED_CLASS);
-          navItem.classList.add(shouldBlur ? FADED_CLASS : VISIBLE_CLASS);
+          addFadeUnFadeStyle(navItem, fade);
         }
       });
     } else {
@@ -221,14 +222,14 @@ function addBlurToNavbarItemsNotInFocus(event, shouldBlur) {
   }
 }
 
-function addNavLinksFadeHoverEffect() {
+function addNavLinksFadeOnHoverEffect() {
   if (NAV_CONTAINER_EL) {
     NAV_CONTAINER_EL.addEventListener('mouseover', (e) =>
-      addBlurToNavbarItemsNotInFocus(e, true)
+      addFadeUnFadeToNavbarItemsNotInFocus(e, true)
     );
 
     NAV_CONTAINER_EL.addEventListener('mouseout', (e) =>
-      addBlurToNavbarItemsNotInFocus(e, false)
+      addFadeUnFadeToNavbarItemsNotInFocus(e, false)
     );
   } else {
     console.error(
@@ -331,7 +332,7 @@ function loadEasterEgg() {
 loadEasterEgg();
 showCookieMessage();
 addCreateAccountClickEvent();
-addPageNavigations();
-addNavLinksFadeHoverEffect();
+addPageNavigationScrollEvents();
+addNavLinksFadeOnHoverEffect();
 addLearnMoreBtnScrollEvent();
 loadOperationsTabs();
