@@ -245,9 +245,11 @@ body {
   width: 100%;
   padding: 0.5rem 4rem 0 4rem;
   height: 5.5rem;
+  background: var(--background-primary);
+  z-index: 1;
 }
 
-.sticky-nav-container {
+.sticky-container {
   left: 0;
   top: 0;
   position: fixed;
