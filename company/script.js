@@ -24,6 +24,8 @@ const FADED_CLASS = 'faded';
 const VISIBLE_CLASS = 'visible';
 const STICKY_CLASS = 'sticky-container';
 const HEADER_CONTAINER_CLASS = 'header-container';
+const SECTION_CONTAINER_CLASS = 'section-container';
+const SECTION_HIDDEN_CLASS = 'section-hidden';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -302,6 +304,43 @@ function addLearnMoreBtnScrollEvent() {
   }
 }
 
+function addRevealSectionStyle(sectionElement) {
+  if (sectionElement) {
+    sectionElement.classList.remove(SECTION_HIDDEN_CLASS);
+  } else {
+    console.log('Trying to reveal invalid section element.');
+  }
+}
+
+function addRevealSectionsEffect() {
+  const observerCallback = (entries) => {
+    entries.forEach((entry) => {
+      if (entry && entry.isIntersecting) {
+        addRevealSectionStyle(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  const observerOptions = {
+    root: null,
+    threshold: 0.15,
+  };
+
+  const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+  document
+    .querySelectorAll(getQueryForClass(SECTION_CONTAINER_CLASS))
+    .forEach((sectionEl) => {
+      if (sectionEl) {
+        observer.observe(sectionEl);
+        sectionEl.classList.add(SECTION_HIDDEN_CLASS);
+      } else {
+        console.error('Unable to add observer to section.');
+      }
+    });
+}
+
 function loadOperationsTabs() {
   if (OPERATIONS_TABS_CONTAINER_EL) {
     OPERATIONS_TABS_CONTAINER_EL.addEventListener('click', (e) => {
@@ -384,4 +423,5 @@ addPageNavigationScrollEvents();
 addNavLinksFadeOnHoverEffect();
 addStickyNavbarOnScrollEffect();
 addLearnMoreBtnScrollEvent();
+addRevealSectionsEffect();
 loadOperationsTabs();
