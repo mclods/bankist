@@ -333,7 +333,6 @@ loadEasterEgg();
 showCookieMessage();
 addCreateAccountClickEvent();
 addPageNavigationScrollEvents();
-addStickyNavbarEffect();
 addNavLinksFadeOnHoverEffect();
 addLearnMoreBtnScrollEvent();
 loadOperationsTabs();
