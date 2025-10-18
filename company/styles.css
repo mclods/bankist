@@ -26,6 +26,7 @@
 
   --background-white: #fff;
   --background-white-dark: #fafafa;
+  --background-dark: #37383d;
 
   --section-separation-border-bottom: solid 1px #bcbcbc;
 
@@ -92,7 +93,6 @@
 /* Flexbox Styles End */
 
 body {
-  color: var(--text-color-primary);
   background-color: var(--background-primary);
 }
 
@@ -112,8 +112,6 @@ body {
 .nav-link:visited {
   display: block;
   padding: 0.5rem 1rem;
-  font-size: 1.12rem;
-  color: var(--text-color-primary);
   text-decoration: none;
   transition: all var(--standard-app-transition-time);
 }
@@ -220,8 +218,22 @@ body {
 }
 /* Visibility End */
 
+/* Text Color Start */
+.text-primary {
+  color: var(--text-color-primary);
+}
+
+.text-secondary {
+  color: var(--text-color-secondary);
+}
+/* Text Color End */
+
 .nav-links-gap {
   column-gap: 0.5rem;
+}
+
+.header-link {
+  font-size: 1.12rem;
 }
 
 .cookie-container {
@@ -446,7 +458,6 @@ body {
   font-weight: 600;
   border-radius: 100%;
   border: none;
-  color: var(--text-color-primary);
   background-color: var(--color-dark-white);
 }
 
@@ -465,7 +476,6 @@ body {
 .modal-title {
   font-size: 2.1rem;
   font-weight: 600;
-  color: var(--text-color-primary);
 }
 
 .modal-field-container {
@@ -478,7 +488,6 @@ body {
 
 .modal-input-label {
   font-size: 1.1rem;
-  color: var(--text-color-primary);
   font-weight: 500;
 }
 
@@ -589,7 +598,44 @@ body {
 .operations-tab-content-description {
   font-size: 1rem;
   font-weight: 300;
-  color: var(--text-color-primary);
+}
+
+.footer {
+  background: var(--background-dark);
+  border: none;
+}
+
+.footer-title {
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+
+.footer-btn-container {
+  margin: 3rem 0 5.5rem 0;
+}
+
+.footer-btn {
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  color: var(--text-color-black);
+}
+
+.footer-nav-links-list {
+  list-style: none;
+}
+
+.footer-link {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.footer-logo-img-container {
+  margin: 3rem 0;
+}
+
+.copyright-title {
+  font-size: 0.9rem;
+  font-weight: 200;
 }
 
 /* Animations Start */

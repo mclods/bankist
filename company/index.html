@@ -13,7 +13,7 @@
     <link rel="shortcut icon" type="image/png" href="../assets/icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="flex-col font-poppins-regular">
+  <body class="flex-col text-primary font-poppins-regular">
     <header id="header-container" class="flex-col header-container">
       <nav class="flex-row justify-between align-center nav-container">
         <div class="flex-row align-center app-logo">
@@ -24,17 +24,24 @@
         </div>
         <div id="nav-links" class="flex-row nav-links-gap">
           <div>
-            <a href="#section-1" class="nav-link font-poppins-regular nav-item"
+            <a
+              href="#section-1"
+              class="nav-link text-primary header-link font-poppins-regular nav-item"
               >Features</a
             >
           </div>
           <div>
-            <a href="#section-2" class="nav-link font-poppins-regular nav-item"
+            <a
+              href="#section-2"
+              class="nav-link text-primary header-link font-poppins-regular nav-item"
               >Operations</a
             >
           </div>
           <div>
-            <a href="#section-3" class="nav-link font-poppins-regular nav-item">
+            <a
+              href="#section-3"
+              class="nav-link text-primary header-link font-poppins-regular nav-item"
+            >
               Testimonials
             </a>
           </div>
@@ -244,7 +251,7 @@
                 </p>
               </div>
               <div>
-                <p class="operations-tab-content-description">
+                <p class="operations-tab-content-description text-primary">
                   With our instant transfer feature, you can send funds to any
                   bank account instantly without waiting for business hours or
                   processing delays. Whether it’s paying a friend, splitting a
@@ -275,7 +282,7 @@
                 </p>
               </div>
               <div>
-                <p class="operations-tab-content-description">
+                <p class="operations-tab-content-description text-primary">
                   Our Instant Loans feature lets you apply, get approved, and
                   receive funds within minutes — no paperwork, no waiting.
                   Whether it’s for an emergency, a dream purchase, or a quick
@@ -306,7 +313,7 @@
                 </p>
               </div>
               <div>
-                <p class="operations-tab-content-description">
+                <p class="operations-tab-content-description text-primary">
                   With the power to close your account instantly — no branch
                   visits, no lengthy procedures. With just a few taps, you can
                   securely close your account, withdraw remaining funds, and
@@ -335,18 +342,76 @@
       </div>
     </section>
 
+    <section
+      id="section-4"
+      class="footer text-secondary flex-col align-center section-container"
+    >
+      <div class="flex-col align-center">
+        <p class="footer-title">
+          The best day to join Bankist was one year ago.
+        </p>
+        <p class="footer-title">The second best is today!</p>
+      </div>
+      <div class="footer-btn-container">
+        <button
+          class="btn round-btn primary-btn font-poppins-regular footer-btn open-account-btn"
+        >
+          Open your free account today!
+        </button>
+      </div>
+      <div>
+        <ul class="footer-nav-links-list flex-row">
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link">About</a>
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link">Pricing</a>
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link"
+              >Terms of Use</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link"
+              >Privacy Policy</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link">Careers</a>
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link">Blog</a>
+          </li>
+          <li>
+            <a href="#" class="nav-link text-secondary footer-link"
+              >Contact Us</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="footer-logo-img-container">
+        <img src="../assets/icon.png" alt="Company Logo" class="logo-img" />
+      </div>
+      <div>
+        <p class="copyright-title">
+          © 2025 developed by The Bankist Team. All rights reserved.
+        </p>
+      </div>
+    </section>
+
     <dialog id="modal-container" class="modal-container">
       <div class="flex-col">
         <div class="flex-row modal-header-container">
           <div>
-            <p class="modal-title font-poppins-regular">
+            <p class="modal-title text-primary font-poppins-regular">
               Open your bank account in just
               <span class="header-title-highlight">5 minutes</span>
             </p>
           </div>
           <div>
             <form method="dialog">
-              <button class="modal-close-btn">X</button>
+              <button class="modal-close-btn text-primary">X</button>
             </form>
           </div>
         </div>
@@ -354,7 +419,7 @@
           <div class="flex-row align-center modal-field-container">
             <div class="modal-input-label-container">
               <label
-                class="modal-input-label"
+                class="modal-input-label text-primary"
                 for="create-account-first-name-input"
                 >First Name</label
               >
@@ -370,7 +435,7 @@
           <div class="flex-row align-center modal-field-container">
             <div class="modal-input-label-container">
               <label
-                class="modal-input-label"
+                class="modal-input-label text-primary"
                 for="create-account-last-name-input"
                 >Last Name</label
               >
@@ -385,7 +450,9 @@
           </div>
           <div class="flex-row align-center modal-field-container">
             <div class="modal-input-label-container">
-              <label class="modal-input-label" for="create-account-email-input"
+              <label
+                class="modal-input-label text-primary"
+                for="create-account-email-input"
                 >Email Address</label
               >
             </div>
