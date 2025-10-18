@@ -49,10 +49,6 @@ const MODAL_CONTAINER_EL = document.getElementById(MODAL_ID);
 const MODAL_SUBMIT_BTN = document.getElementById(MODAL_SUBMIT_BTN_ID);
 const NAV_LINKS_CONTAINER_EL = document.getElementById(NAV_LINKS_CONTAINER_ID);
 
-const LOGO_IMG_EL = document.querySelector(getQueryForClass(LOGO_IMG_CLASS));
-const OPEN_ACCOUNT_BTN = document.querySelector(
-  getQueryForClass(OPEN_ACCOUNT_BTN_CLASS)
-);
 const OPERATIONS_TABS_CONTAINER_EL = document.querySelector(
   getQueryForClass(OPERATIONS_TABS_CONTAINER_CLASS)
 );
@@ -152,8 +148,14 @@ function addCloseCreateAccountModalHandler() {
 function addCreateAccountClickEvent() {
   addCloseCreateAccountModalHandler();
 
-  if (OPEN_ACCOUNT_BTN) {
-    OPEN_ACCOUNT_BTN.addEventListener('click', showCreateAccountModal);
+  const OPEN_ACCOUNT_BUTTONS = document.querySelectorAll(
+    getQueryForClass(OPEN_ACCOUNT_BTN_CLASS)
+  );
+
+  if (OPEN_ACCOUNT_BUTTONS) {
+    OPEN_ACCOUNT_BUTTONS.forEach((openAccountBtn) => {
+      openAccountBtn.addEventListener('click', showCreateAccountModal);
+    });
   } else {
     console.error(
       ERROR_MESSAGE.getMissingElementWithClassError(OPEN_ACCOUNT_BTN_CLASS)
@@ -435,13 +437,17 @@ function loadOperationsTabs() {
 }
 
 function loadEasterEgg() {
-  if (LOGO_IMG_EL) {
-    LOGO_IMG_EL.addEventListener('click', () => {
-      LOGO_IMG_EL.classList.add(ROTATE_STYLE);
+  const LOGOS = document.querySelectorAll(getQueryForClass(LOGO_IMG_CLASS));
 
-      setTimeout(() => {
-        LOGO_IMG_EL.classList.remove(ROTATE_STYLE);
-      }, ROTATE_TIME_SECONDS * 1000);
+  if (LOGOS) {
+    LOGOS.forEach((logoEl) => {
+      logoEl.addEventListener('click', () => {
+        logoEl.classList.add(ROTATE_STYLE);
+
+        setTimeout(() => {
+          logoEl.classList.remove(ROTATE_STYLE);
+        }, ROTATE_TIME_SECONDS * 1000);
+      });
     });
   } else {
     console.error(
