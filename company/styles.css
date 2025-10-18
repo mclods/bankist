@@ -22,7 +22,10 @@
   --gradient-secondary: linear-gradient(to top left, #ffb003, #ffcb03);
 
   --background-primary: #f3f3f3;
+
   --background-secondary: #bbb;
+  --background-secondary-dark: #9e9c9c;
+  --background-secondary-darker: #868686;
 
   --background-white: #fff;
   --background-white-dark: #fafafa;
@@ -599,6 +602,91 @@ body {
   font-size: 1rem;
   font-weight: 300;
 }
+
+.slider {
+  position: relative;
+  width: 60vw;
+  height: 60vh;
+  padding: 5rem 6vw;
+  overflow: hidden;
+}
+
+.slide {
+  padding-top: 4rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48vw;
+  transition: transform 1s;
+}
+
+.slide::before {
+  content: '\201C';
+  position: relative;
+  top: -4.2rem;
+  line-height: 1;
+  font-size: 11rem;
+  font-family: inherit;
+  color: var(--color-primary);
+}
+
+.slide-content-gap {
+  row-gap: 2rem;
+}
+
+.testimonial-title {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.testimonial-description {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--text-color-primary);
+}
+
+.testimonial-img-container {
+  margin: 1rem;
+}
+
+.testimonial-img {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+}
+
+.testimonial-user-name {
+  font-weight: 600;
+}
+
+.testimonial-user-location {
+  font-weight: 300;
+}
+
+.slider-btn {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  background: var(--background-secondary);
+}
+
+.slider-btn:hover {
+  background: var(--background-secondary-dark);
+}
+
+.slider-btn:active {
+  background: var(--background-secondary-darker);
+}
+
+/* .slider-left-btn {
+  top: -20vh;
+  left: -28vw;
+} */
+
+/* .slider-right-btn {
+  left: 28vw;
+} */
 
 .footer {
   background: var(--background-dark);

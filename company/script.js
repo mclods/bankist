@@ -1,6 +1,7 @@
 'use strict';
 
 // Global Variables
+// Element Ids
 const SECTION_1_ID = 'section-1';
 const COOKIE_CONTAINER_ID = 'cookie-container';
 const LEARN_MORE_BTN_ID = 'learn-more-btn';
@@ -8,6 +9,7 @@ const MODAL_ID = 'modal-container';
 const MODAL_SUBMIT_BTN_ID = 'modal-submit-btn';
 const NAV_LINKS_CONTAINER_ID = 'nav-links';
 
+// Element Classes
 const APP_LOGO_CONTAINER_CLASS = 'app-logo';
 const LOGO_IMG_CLASS = 'logo-img';
 const OPEN_ACCOUNT_BTN_CLASS = 'open-account-btn';
@@ -28,6 +30,9 @@ const SECTION_CONTAINER_CLASS = 'section-container';
 const SECTION_HIDDEN_CLASS = 'section-hidden';
 const FEATURES_IMG_CLASS = 'features-img';
 const LAZY_IMG_CLASS = 'lazy-img';
+const SLIDE_CLASS = 'slide';
+const SLIDER_LEFT_BTN_CLASS = 'slider-left-btn';
+const SLIDER_RIGHT_BTN_CLASS = 'slider-right-btn';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -40,6 +45,8 @@ const ERROR_MESSAGE = {
     return `Element with ClassName: ${className} does not exist in the DOM.`;
   },
 };
+
+let ACTIVE_SLIDE = 0;
 
 // Global DOM Elements
 const COOKIE_CONTAINER_EL = document.getElementById(COOKIE_CONTAINER_ID);
@@ -60,6 +67,12 @@ const NAV_CONTAINER_EL = document.querySelector(
 );
 const HEADER_CONTAINER_EL = document.querySelector(
   getQueryForClass(HEADER_CONTAINER_CLASS)
+);
+const SLIDER_LEFT_BTN = document.querySelector(
+  getQueryForClass(SLIDER_LEFT_BTN_CLASS)
+);
+const SLIDER_RIGHT_BTN = document.querySelector(
+  getQueryForClass(SLIDER_RIGHT_BTN_CLASS)
 );
 
 // Helper Methods
@@ -436,6 +449,77 @@ function loadOperationsTabs() {
   }
 }
 
+function adjustSlides(slidesComponent, activeSlide) {
+  if (slidesComponent) {
+    slidesComponent.forEach((slide, i) => {
+      slide.style.transform = `translateX(${(i - activeSlide) * 100}vw)`;
+    });
+  } else {
+    console.error('Trying to adjust empty slides.');
+  }
+}
+
+function initSlider(slidesComponent) {
+  ACTIVE_SLIDE = 0;
+  adjustSlides(slidesComponent, ACTIVE_SLIDE);
+}
+
+function moveSliderLeft(slidesComponent) {
+  if (slidesComponent) {
+    ACTIVE_SLIDE--;
+    const maxSlides = slidesComponent.length;
+
+    if (ACTIVE_SLIDE === -1) {
+      ACTIVE_SLIDE = maxSlides - 1;
+    }
+
+    adjustSlides(slidesComponent, ACTIVE_SLIDE);
+  } else {
+    console.error('Cannot move empty slider left');
+  }
+}
+
+function moveSliderRight(slidesComponent) {
+  if (slidesComponent) {
+    ACTIVE_SLIDE++;
+    const maxSlides = slidesComponent.length;
+
+    if (ACTIVE_SLIDE === maxSlides) {
+      ACTIVE_SLIDE = 0;
+    }
+
+    adjustSlides(slidesComponent, ACTIVE_SLIDE);
+  } else {
+    console.error('Cannot move empty slider right');
+  }
+}
+
+function loadTestimonialsSilder() {
+  const slides = document.querySelectorAll(getQueryForClass(SLIDE_CLASS));
+
+  if (slides) {
+    initSlider(slides);
+
+    if (SLIDER_LEFT_BTN) {
+      SLIDER_LEFT_BTN.addEventListener('click', () => moveSliderLeft(slides));
+    } else {
+      console.error(
+        ERROR_MESSAGE.getMissingElementWithClassError(SLIDER_LEFT_BTN_CLASS)
+      );
+    }
+
+    if (SLIDER_RIGHT_BTN) {
+      SLIDER_RIGHT_BTN.addEventListener('click', () => moveSliderRight(slides));
+    } else {
+      console.error(
+        ERROR_MESSAGE.getMissingElementWithClassError(SLIDER_RIGHT_BTN_CLASS)
+      );
+    }
+  } else {
+    console.error(ERROR_MESSAGE.getMissingElementWithClassError(SLIDE_CLASS));
+  }
+}
+
 function loadEasterEgg() {
   const LOGOS = document.querySelectorAll(getQueryForClass(LOGO_IMG_CLASS));
 
@@ -466,3 +550,4 @@ addLearnMoreBtnScrollEvent();
 addRevealSectionsEffect();
 lazyLoadFeaturesImages();
 loadOperationsTabs();
+loadTestimonialsSilder();
