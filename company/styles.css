@@ -679,14 +679,29 @@ body {
   background: var(--background-secondary-darker);
 }
 
-/* .slider-left-btn {
-  top: -20vh;
-  left: -28vw;
-} */
+.dots-container {
+  background: var(--color-dark-white);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4rem;
+}
 
-/* .slider-right-btn {
-  left: 28vw;
-} */
+.dots-container-gap {
+  column-gap: 1rem;
+}
+
+.dot-btn {
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-dark-white-darkest);
+  transition: all 0.5s;
+}
+
+.dot-btn-active {
+  background: var(--background-secondary-darker);
+}
 
 .footer {
   background: var(--background-dark);

@@ -33,6 +33,9 @@ const LAZY_IMG_CLASS = 'lazy-img';
 const SLIDE_CLASS = 'slide';
 const SLIDER_LEFT_BTN_CLASS = 'slider-left-btn';
 const SLIDER_RIGHT_BTN_CLASS = 'slider-right-btn';
+const DOTS_CONTAINER_CLASS = 'dots-container';
+const DOT_BTN_CLASS = 'dot-btn';
+const DOT_BTN_ACTIVE_CLASS = 'dot-btn-active';
 
 const ROTATE_STYLE = 'rotate';
 const ROTATE_TIME_SECONDS = 0.5;
@@ -73,6 +76,9 @@ const SLIDER_LEFT_BTN = document.querySelector(
 );
 const SLIDER_RIGHT_BTN = document.querySelector(
   getQueryForClass(SLIDER_RIGHT_BTN_CLASS)
+);
+const DOTS_CONTAINER_EL = document.querySelector(
+  getQueryForClass(DOTS_CONTAINER_CLASS)
 );
 
 // Helper Methods
@@ -459,6 +465,48 @@ function adjustSlides(slidesComponent, activeSlide) {
   }
 }
 
+function adjustSliderDots(activeSlideIndex) {
+  const dotBtns = document.querySelectorAll(getQueryForClass(DOT_BTN_CLASS));
+
+  if (dotBtns) {
+    dotBtns.forEach((dotBtn, i) => {
+      if (i === activeSlideIndex) {
+        dotBtn.classList.add(DOT_BTN_ACTIVE_CLASS);
+      } else {
+        dotBtn.classList.remove(DOT_BTN_ACTIVE_CLASS);
+      }
+    });
+  } else {
+    console.error(ERROR_MESSAGE.getMissingElementWithClassError(DOT_BTN_CLASS));
+  }
+}
+
+function getDotBtnEl(slidesIndex) {
+  const dotBtnContainer = document.createElement('div');
+  const dotBtn = document.createElement('button');
+
+  dotBtn.classList.add(DOT_BTN_CLASS);
+  dotBtn.dataset.slide = slidesIndex;
+  dotBtnContainer.appendChild(dotBtn);
+
+  return dotBtnContainer;
+}
+
+function initSliderDots(slidesComponent) {
+  if (DOTS_CONTAINER_EL) {
+    slidesComponent.forEach((_, i) => {
+      const dotBtn = getDotBtnEl(i);
+      DOTS_CONTAINER_EL.appendChild(dotBtn);
+    });
+
+    adjustSliderDots(ACTIVE_SLIDE);
+  } else {
+    console.error(
+      ERROR_MESSAGE.getMissingElementWithClassError(DOTS_CONTAINER_CLASS)
+    );
+  }
+}
+
 function initSlider(slidesComponent) {
   ACTIVE_SLIDE = 0;
   adjustSlides(slidesComponent, ACTIVE_SLIDE);
@@ -474,8 +522,9 @@ function moveSliderLeft(slidesComponent) {
     }
 
     adjustSlides(slidesComponent, ACTIVE_SLIDE);
+    adjustSliderDots(ACTIVE_SLIDE);
   } else {
-    console.error('Cannot move empty slider left');
+    console.error('Cannot move empty slider left.');
   }
 }
 
@@ -489,8 +538,34 @@ function moveSliderRight(slidesComponent) {
     }
 
     adjustSlides(slidesComponent, ACTIVE_SLIDE);
+    adjustSliderDots(ACTIVE_SLIDE);
   } else {
-    console.error('Cannot move empty slider right');
+    console.error('Cannot move empty slider right.');
+  }
+}
+
+function handleDotClick(e, slidesComponent) {
+  if (slidesComponent) {
+    const targetEl = e.target;
+
+    if (targetEl && targetEl.classList.contains(DOT_BTN_CLASS)) {
+      const dotBtn = targetEl;
+      const dotBtnSlideIndex = Number.parseInt(dotBtn.dataset.slide);
+      const maxSlides = slidesComponent.length;
+
+      if (dotBtnSlideIndex >= 0 && dotBtnSlideIndex < maxSlides) {
+        if (dotBtnSlideIndex !== ACTIVE_SLIDE) {
+          ACTIVE_SLIDE = dotBtnSlideIndex;
+
+          adjustSlides(slidesComponent, ACTIVE_SLIDE);
+          adjustSliderDots(ACTIVE_SLIDE);
+        }
+      } else {
+        console.error('Cannot move to invalid slide.');
+      }
+    }
+  } else {
+    console.error('Cannot move empty slides.');
   }
 }
 
@@ -499,6 +574,7 @@ function loadTestimonialsSilder() {
 
   if (slides) {
     initSlider(slides);
+    initSliderDots(slides);
 
     if (SLIDER_LEFT_BTN) {
       SLIDER_LEFT_BTN.addEventListener('click', () => moveSliderLeft(slides));
@@ -513,6 +589,16 @@ function loadTestimonialsSilder() {
     } else {
       console.error(
         ERROR_MESSAGE.getMissingElementWithClassError(SLIDER_RIGHT_BTN_CLASS)
+      );
+    }
+
+    if (DOTS_CONTAINER_EL) {
+      DOTS_CONTAINER_EL.addEventListener('click', (e) =>
+        handleDotClick(e, slides)
+      );
+    } else {
+      console.error(
+        ERROR_MESSAGE.getMissingElementWithClassError(DOTS_CONTAINER_CLASS)
       );
     }
   } else {
